@@ -1,0 +1,5 @@
+venv
+.c9
+*.pyc
+db.sqlite3
+zappa_settings.json

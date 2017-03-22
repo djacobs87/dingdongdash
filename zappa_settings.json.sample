@@ -1,0 +1,6 @@
+{
+    "dev": {
+        "django_settings": "ding_dong_ditch.settings", 
+        "s3_bucket": "zappa-jw2nxldml"
+    }
+}
