@@ -1,10 +1,11 @@
-# Ding Dong Ditch _(ding-dong-ditch)_
+# Ding Dong Ditch _(dingdongditch)_
 
 > Connect to Wi-Fi and ring any phone, any time with time and location based intelligence.
 
 ## Install
 
-TODO
+1. Check out the repo
+2. `pip install -r requirements.txt` in or outside a venv
 
 ## Usage
 
