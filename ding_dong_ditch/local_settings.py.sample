@@ -1,0 +1,8 @@
+TWILIO_ACCOUNT_SID = '' # Production Account SID
+TWILIO_AUTH_TOKEN = '' # Production Auth Token
+TWILIO_TEST_ACCOUNT_SID = '' # Test Account SID
+TWILIO_TEST_AUTH_TOKEN = '' # Test Auth Token
+TWILIO_FROM_NUMBER = '' # FROM Number for Twilio Integration
+TWILIO_DEFAULT_XML_URL = '' # XML for Voice Script
+TWILIO_DEFAULT_TO_NUMBER = '' # From Number for Twilio Missives
+TWILIO_DEFAULT_TEXT_MESSAGE = '' # Default message sent by system.

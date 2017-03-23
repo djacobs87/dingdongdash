@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'organizations',
     'schedule',
+    'api',
+    'core'
 ]
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -132,5 +135,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
 
-ALLOWED_HOSTS = ['ding-dong-ditch-aphelionz.c9users.io', 'ngy7i9skf2.execute-api.us-east-1.amazonaws.com']
+ALLOWED_HOSTS = [
+    'testserver',
+    'ding-dong-ditch-aphelionz.c9users.io',
+    'ngy7i9skf2.execute-api.us-east-1.amazonaws.com'
+]
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
