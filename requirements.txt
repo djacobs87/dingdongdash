@@ -12,6 +12,7 @@ django-allauth==0.31.0
 django-annoying==0.10.3
 django-extensions==1.7.7
 django-organizations==0.9.1
+django-picklefield==0.3.2
 django-scheduler==0.8.3
 docutils==0.13.1
 durationpy==0.3
