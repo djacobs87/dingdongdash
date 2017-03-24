@@ -6,3 +6,8 @@ TWILIO_FROM_NUMBER = '' # FROM Number for Twilio Integration
 TWILIO_DEFAULT_XML_URL = '' # XML for Voice Script
 TWILIO_DEFAULT_TO_NUMBER = '' # From Number for Twilio Missives
 TWILIO_DEFAULT_TEXT_MESSAGE = '' # Default message sent by system.
+
+# See https://www.twilio.com/docs/api/rest/test-credentials#test-incoming-phone-numbers-parameters-PhoneNumber
+TWILIO_MAGIC_NUMBER_AVAILABLE = '+15005550006' # This phone number is valid and available.
+TWILIO_MAGIC_NUMBER_UNAVAILABLE = '+15005550000' # This phone number is unavailable.
+TWILIO_MAGIC_NUMBER_INVALID = '+15005550001' # This phone number is invalid.
