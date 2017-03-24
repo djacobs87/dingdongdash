@@ -69,9 +69,12 @@ class FunctionalTestCase(TestCase):
         self.organization_user1.delete()
         self.organization_user2.delete()
 
-    def test_generate_to_number_fallback_to_owner(self):
-        number = generate_to_number("G030JF053091HCMS", "+19783284499")
-        self.assertEqual(number, "+19783284466")
+    def test_generate_to_number_no_number_found(self):
+        try:
+            number = generate_to_number("1111222233334444", "+19783284499")
+            self.fail()
+        except Exception as e:
+            pass
 
     def test_generate_to_number_user_one(self):
         an_hour_ago = datetime.now() - timedelta(hours = 1)
@@ -88,18 +91,20 @@ class FunctionalTestCase(TestCase):
         self.assertEqual(number, "+19783284477")
 
     def test_generate_to_number_user_two_fallback(self):
-        an_hour_ago = datetime.now() - timedelta(hours = 1)
-        an_hour_from_now = datetime.now() + timedelta(hours = 1)
+        try:
+            an_hour_ago = datetime.now() - timedelta(hours = 1)
+            an_hour_from_now = datetime.now() + timedelta(hours = 1)
 
-        staff_event = Event(start=pytz.utc.localize(an_hour_ago),
-                            end=pytz.utc.localize(an_hour_from_now),
-                            creator=self.staff_user2)
-        staff_event.save()
+            staff_event = Event(start=pytz.utc.localize(an_hour_ago),
+                                end=pytz.utc.localize(an_hour_from_now),
+                                creator=self.staff_user2)
+            staff_event.save()
 
-        number = generate_to_number("G030JF053091HCMS", "+19783284499")
-        staff_event.delete()
-
-        self.assertEqual(number, "+19783284499")
+            number = generate_to_number("G030JF053091HCMS", "+19783284499")
+            self.fail()
+        except Exception as e:
+            staff_event.delete()
+            pass
 
     def test_generate_to_number_throws_exception(self):
         try:

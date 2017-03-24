@@ -8,9 +8,11 @@ base58==0.2.4
 boto3==1.4.4
 botocore==1.5.26
 click==6.7
+coverage==4.3.4
 django-allauth==0.31.0
 django-annoying==0.10.3
 django-extensions==1.7.7
+django-material==0.13.1
 django-organizations==0.9.1
 django-picklefield==0.3.2
 django-scheduler==0.8.3

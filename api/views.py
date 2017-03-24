@@ -21,6 +21,5 @@ def process_button(request):
 
         return HttpResponse('Success')
     except Exception as e:
-        print(e)
         return HttpResponse(e, status=400)
 

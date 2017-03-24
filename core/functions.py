@@ -14,7 +14,10 @@ def generate_to_number(serial_number, fallback_to_number):
     if(serial_number == None):
         raise Exception("Must provide a serial number")
 
-    button = Button.objects.get(serial_number=serial_number)
+    try:
+        button = Button.objects.get(serial_number=serial_number)
+    except Button.DoesNotExist as e:
+        raise ObjectDoesNotExist(e)
 
     if hasattr(button.organization, 'users'):
         org_users = button.organization.users.all()
@@ -29,9 +32,9 @@ def generate_to_number(serial_number, fallback_to_number):
             phone = Phone.objects.get(user=phone_user)
             return phone.phone_number
         except Phone.DoesNotExist as e:
-            return fallback_to_number
+            raise ObjectDoesNotExist(e)
 
-    return fallback_to_number
+    raise Exception("Unable to determine phone number")
 
 
 def generate_params(serial_number, click_type, spoof, **kwargs):
