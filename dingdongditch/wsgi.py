@@ -1,5 +1,5 @@
 """
-WSGI config for ding_dong_ditch project.
+WSGI config for dingdongditch project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ding_dong_ditch.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dingdongditch.settings")
 
 application = get_wsgi_application()

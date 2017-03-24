@@ -4,7 +4,7 @@ from organizations.models import Organization
 from schedule.models import Event
 from twilio.rest import TwilioRestClient
 
-from ding_dong_ditch import settings
+from dingdongditch import settings
 from core.models import Button, Phone
 
 # import boto3
