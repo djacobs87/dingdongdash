@@ -4,3 +4,4 @@ venv
 db.sqlite3
 zappa_settings.json
 local_settings.py
+./static/
