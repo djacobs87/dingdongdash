@@ -24,4 +24,4 @@ class Phone(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
     def __str__(self):
-        return self.phone_number
+        return '%s (%s)' % (self.phone_number, self.user)
