@@ -17,12 +17,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from organizations.backends import invitation_backend
-from views import make_call
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^organizations/', include('organizations.urls')),
     url(r'^invitations/', include(invitation_backend().get_urls())),
-    url(r'^functions/make_call/', make_call)
+    url(r'^api/', include('api.urls')),
 ]
