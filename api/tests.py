@@ -1,8 +1,9 @@
 from django.test import Client, TestCase
+from django.contrib.auth.models import User
 from organizations.models import Organization, OrganizationOwner, OrganizationUser
 
 from core.models import Button, Phone
-from django.contrib.auth.models import User
+
 
 class PrimaryUseTestCase(TestCase):
     def setUp(self):

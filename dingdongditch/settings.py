@@ -142,6 +142,12 @@ ALLOWED_HOSTS = [
     'ngy7i9skf2.execute-api.us-east-1.amazonaws.com'
 ]
 
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+LOGIN_REDIRECT_URL = "/dashboard"
+
 try:
     from local_settings import *
 except ImportError:

@@ -7,7 +7,7 @@ from django.test import TestCase
 from organizations.models import Organization, OrganizationOwner, OrganizationUser
 from schedule.models import Calendar, Event
 
-from .functions import *
+from .functions import generate_to_number
 from .models import Button, Phone
 
 
@@ -18,12 +18,12 @@ class FunctionalTestCase(TestCase):
                                                    password='abc123!@#')
         self.owner_user.save()
         self.staff_user1 = User.objects.create_user(username='staff_user1',
-                                                   email='user1@test.com',
-                                                   password='abc123!@#')
+                                                    email='user1@test.com',
+                                                    password='abc123!@#')
         self.staff_user1.save()
         self.staff_user2 = User.objects.create_user(username='staff_user2',
-                                                   email='user1@test.com',
-                                                   password='abc123!@#')
+                                                    email='user1@test.com',
+                                                    password='abc123!@#')
         self.staff_user2.save()
 
         self.owner_phone = Phone(phone_number="+19783284466", user=self.owner_user)
@@ -71,14 +71,14 @@ class FunctionalTestCase(TestCase):
 
     def test_generate_to_number_no_number_found(self):
         try:
-            number = generate_to_number("1111222233334444", "+19783284499")
+            generate_to_number("1111222233334444", "+19783284499")
             self.fail()
-        except Exception as e:
+        except Exception:
             pass
 
     def test_generate_to_number_user_one(self):
-        an_hour_ago = datetime.now() - timedelta(hours = 1)
-        an_hour_from_now = datetime.now() + timedelta(hours = 1)
+        an_hour_ago = datetime.now() - timedelta(hours=1)
+        an_hour_from_now = datetime.now() + timedelta(hours=1)
 
         staff_event = Event(start=pytz.utc.localize(an_hour_ago),
                             end=pytz.utc.localize(an_hour_from_now),
@@ -92,23 +92,23 @@ class FunctionalTestCase(TestCase):
 
     def test_generate_to_number_user_two_fallback(self):
         try:
-            an_hour_ago = datetime.now() - timedelta(hours = 1)
-            an_hour_from_now = datetime.now() + timedelta(hours = 1)
+            an_hour_ago = datetime.now() - timedelta(hours=1)
+            an_hour_from_now = datetime.now() + timedelta(hours=1)
 
             staff_event = Event(start=pytz.utc.localize(an_hour_ago),
                                 end=pytz.utc.localize(an_hour_from_now),
                                 creator=self.staff_user2)
             staff_event.save()
 
-            number = generate_to_number("G030JF053091HCMS", "+19783284499")
+            generate_to_number("G030JF053091HCMS", "+19783284499")
             self.fail()
-        except Exception as e:
+        except Exception:
             staff_event.delete()
             pass
 
     def test_generate_to_number_throws_exception(self):
         try:
-            number = generate_to_number(None, "+19783284466")
+            generate_to_number(None, "+19783284466")
             self.fail()
-        except Exception as e:
+        except Exception:
             pass

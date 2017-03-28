@@ -1,6 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
 
-from organizations.models import Organization
 from schedule.models import Event
 from twilio.rest import TwilioRestClient
 
@@ -10,8 +9,9 @@ from core.models import Button, Phone
 # import boto3
 # from boto3.dynamodb.conditions import Key, Attr
 
+
 def generate_to_number(serial_number, fallback_to_number):
-    if(serial_number == None):
+    if serial_number is None:
         raise Exception("Must provide a serial number")
 
     try:
@@ -42,11 +42,11 @@ def generate_params(serial_number, click_type, spoof, **kwargs):
 
     if(spoof):
         params['account_sid'] = kwargs.get('account_sid', settings.TWILIO_TEST_ACCOUNT_SID)
-        params['auth_token']  = kwargs.get('auth_token', settings.TWILIO_TEST_AUTH_TOKEN)
+        params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_TEST_AUTH_TOKEN)
         params['from_number'] = settings.TWILIO_MAGIC_NUMBER_AVAILABLE
     else:
         params['account_sid'] = kwargs.get('account_sid', settings.TWILIO_ACCOUNT_SID)
-        params['auth_token']  = kwargs.get('auth_token', settings.TWILIO_AUTH_TOKEN)
+        params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_AUTH_TOKEN)
         params['from_number'] = kwargs.get('from_number', settings.TWILIO_FROM_NUMBER)
 
     fallback_to_number = kwargs.get('to_number', settings.TWILIO_DEFAULT_TO_NUMBER)
@@ -57,7 +57,7 @@ def generate_params(serial_number, click_type, spoof, **kwargs):
 
 def process_button(battery_voltage, serial_number, click_type, spoof=False):
     try:
-        button = Button.objects.get(serial_number=serial_number)
+        Button.objects.get(serial_number=serial_number)
     except Button.DoesNotExist as e:
         raise ObjectDoesNotExist(e)
 
@@ -111,7 +111,6 @@ def send_message(body, **kwargs):
     return message
 
 
-
 # def register_button(request):
 #     import httplib
 #     import urllib
@@ -125,7 +124,8 @@ def send_message(body, **kwargs):
 #     ERROR_INVALID_REQUEST = { "errorMessage": "Invalid request" }
 
 #     # def validate_hmac(body, hmac_to_verify, shared_secret):
-#     #     generated_hmac = base64.b64encode(hmac.new(str(shared_secret), body, hashlib.sha256).digest())
+#     #     generated_hmac =
+#           base64.b64encode(hmac.new(str(shared_secret), body, hashlib.sha256).digest())
 #     #     return hmac_to_verify == generated_hmac
 
 #     # def lambda_handler(event, context):
@@ -148,7 +148,8 @@ def send_message(body, **kwargs):
 #                         'serialnum': "none " + str(body.get('order_number')) + " " + str(i),
 #                         'name': body.get('customer').get('default_address').get('name'),
 #                         'email': body.get('customer').get('email'),
-#                         'phonenum': "+1" + body.get('customer').get('default_address').get('phone'),
+#                         'phonenum':
+#                           "+1" + body.get('customer').get('default_address').get('phone'),
 #                         'ordernum': body.get('order_number')
 #                     }
 #                 )
@@ -162,5 +163,6 @@ def send_message(body, **kwargs):
     # Finds an item in our table with a serial number that matches the event serial number
     # response = table.query(
     #     KeyConditionExpression=Key('serialnum').eq(event['serialNumber']),
-    #     ProjectionExpression='phonenum'		# This filters the query results to include only the phone number
+    #     ProjectionExpression='phonenum'
+    # This filters the query results to include only the phone number
     # )

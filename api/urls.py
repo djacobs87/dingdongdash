@@ -1,4 +1,4 @@
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
 from views import process_button
 

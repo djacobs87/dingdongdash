@@ -2,6 +2,7 @@ from django.http import HttpResponse
 
 import core.functions as ddd
 
+
 def process_button(request):
     if(request.method != "POST"):
         return HttpResponse("Method not allowed", status=400)
@@ -22,4 +23,3 @@ def process_button(request):
         return HttpResponse('Success')
     except Exception as e:
         return HttpResponse(e, status=400)
-

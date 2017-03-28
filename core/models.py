@@ -9,15 +9,6 @@ BUTTON_ACTION_CHOICES = [
     ('call', "Make Voice Call")
 ]
 
-class Button(models.Model):
-    serial_number = models.CharField(max_length=16, unique=True)
-    single_press_action = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    double_press_action = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='message')
-    long_press_action = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return self.serial_number
 
 class Phone(models.Model):
     phone_number = models.CharField(max_length=15, null=False)
@@ -25,3 +16,40 @@ class Phone(models.Model):
 
     def __str__(self):
         return '%s (%s)' % (self.phone_number, self.user)
+
+
+class ButtonAction(models.Model):
+    name = models.CharField(max_length=128, null=True)
+    action = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
+    phone = models.ForeignKey(Phone, on_delete=models.DO_NOTHING, null=False)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+
+        return self.action
+
+
+class Button(models.Model):
+    name = models.CharField(max_length=64, null=True)
+    description = models.CharField(max_length=128, null=True)
+    serial_number = models.CharField(max_length=16, unique=True)
+    single_press_action = models.ForeignKey(ButtonAction,
+                                            on_delete=models.CASCADE,
+                                            null=True,
+                                            related_name="single_press_action")
+    double_press_action = models.ForeignKey(ButtonAction,
+                                            on_delete=models.CASCADE,
+                                            null=True,
+                                            related_name="double_press_action")
+    long_press_action = models.ForeignKey(ButtonAction,
+                                          on_delete=models.CASCADE,
+                                          null=True,
+                                          related_name="long_press_action")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+
+        return self.serial_number
