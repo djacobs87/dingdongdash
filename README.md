@@ -1,10 +1,10 @@
-# Ding Dong Ditch _(dingdongditch)_
+# ⠙⠙⠙ _(dingdongditch)_
 
 > Connect to Wi-Fi and ring any phone, any time with time and location based intelligence.
 
 ## Install
 
-Ding Dong Ditch runs as a Django application.
+⠙⠙⠙ runs as a Django application.
 
 ### Dependencies
 
