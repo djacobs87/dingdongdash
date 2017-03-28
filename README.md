@@ -4,7 +4,7 @@
 
 ## Install
 
-Ding Dong Ditch runs as a Django application.
+⠙⠙⠙ runs as a Django application.
 
 ### Dependencies
 
