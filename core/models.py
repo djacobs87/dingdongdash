@@ -31,6 +31,10 @@ class ButtonAction(models.Model):
 
 
 class Button(models.Model):
+    SP = "SINGLE"
+    DP = "DOUBLE"
+    LP = "LONG"
+
     name = models.CharField(max_length=64, null=True)
     description = models.CharField(max_length=128, null=True)
     serial_number = models.CharField(max_length=16, unique=True)

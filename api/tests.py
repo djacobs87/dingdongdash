@@ -1,33 +1,22 @@
 from django.test import Client, TestCase
 from django.contrib.auth.models import User
-from organizations.models import Organization, OrganizationOwner, OrganizationUser
 
-from core.models import Button, Phone
+from core.models import Button, ButtonAction, Phone
 
 
 class PrimaryUseTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
-        self.owner_user = User.objects.create_user(username='owner_user',
-                                                   email='user1@test.com',
-                                                   password='abc123!@#')
-        self.owner_user.save()
-        self.owner_phone = Phone(phone_number="+19783284466", user=self.owner_user)
-        self.owner_phone.save()
-
-        self.organization = Organization(name="Test Organization")
-        self.organization.save()
-
-        self.organization_owner_user = OrganizationUser(organization=self.organization,
-                                                        user=self.owner_user)
-        self.organization_owner_user.save()
-        self.organization_owner = OrganizationOwner(organization=self.organization,
-                                                    organization_user=self.organization_owner_user)
-        self.organization_owner.save()
-
-        self.button = Button(serial_number="fooofooodoggdogg", organization=self.organization)
-        self.button.save()
+        self.user1 = User.objects.create_user(username='User1',
+                                              email='user1@test.com',
+                                              password='abc123!@#')
+        self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
+        self.button_action1 = ButtonAction.objects.create(name="Call User1", phone=self.phone)
+        self.button_action2 = ButtonAction.objects.create(name="Text User1", phone=self.phone)
+        self.button = Button.objects.create(serial_number="fooofooodoggdogg",
+                                            single_press_action=self.button_action1,
+                                            double_press_action=self.button_action2)
 
     def tearDown(self):
         self.button.delete()
@@ -80,7 +69,7 @@ class PrimaryUseTestCase(TestCase):
             'clickType': [u'LONG']
         })
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 400)
 
     def test_non_post_request(self):
         response = self.client.get('/api/functions/process_button/', {})

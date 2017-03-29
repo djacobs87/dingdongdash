@@ -1,43 +1,12 @@
 from django.core.exceptions import ObjectDoesNotExist
 
-from schedule.models import Event
 from twilio.rest import TwilioRestClient
 
 from dingdongditch import settings
-from core.models import Button, Phone
-
-# import boto3
-# from boto3.dynamodb.conditions import Key, Attr
+from core.models import Button
 
 
-def generate_to_number(serial_number, fallback_to_number):
-    if serial_number is None:
-        raise Exception("Must provide a serial number")
-
-    try:
-        button = Button.objects.get(serial_number=serial_number)
-    except Button.DoesNotExist as e:
-        raise ObjectDoesNotExist(e)
-
-    if hasattr(button.organization, 'users'):
-        org_users = button.organization.users.all()
-        org_events = Event.objects.filter(creator__in=org_users)
-
-        if len(org_events) == 0:
-            phone_user = button.organization.owner.organization_user.user
-        else:
-            phone_user = org_events[0].creator
-
-        try:
-            phone = Phone.objects.get(user=phone_user)
-            return phone.phone_number
-        except Phone.DoesNotExist as e:
-            raise ObjectDoesNotExist(e)
-
-    raise Exception("Unable to determine phone number")
-
-
-def generate_params(serial_number, click_type, spoof, **kwargs):
+def generate_params(button_action, spoof, **kwargs):
     params = {}
 
     if(spoof):
@@ -49,30 +18,28 @@ def generate_params(serial_number, click_type, spoof, **kwargs):
         params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_AUTH_TOKEN)
         params['from_number'] = kwargs.get('from_number', settings.TWILIO_FROM_NUMBER)
 
-    fallback_to_number = kwargs.get('to_number', settings.TWILIO_DEFAULT_TO_NUMBER)
-    params['to_number'] = generate_to_number(serial_number, fallback_to_number)
+    params['to_number'] = button_action.phone.phone_number
 
     return params
 
 
 def process_button(battery_voltage, serial_number, click_type, spoof=False):
     try:
-        Button.objects.get(serial_number=serial_number)
+        button = Button.objects.get(serial_number=serial_number)
     except Button.DoesNotExist as e:
         raise ObjectDoesNotExist(e)
 
     try:
         if(click_type == "SINGLE"):
-            params = generate_params(serial_number, click_type, spoof)
+            params = generate_params(button.single_press_action, spoof)
             result = create_call(settings.TWILIO_DEFAULT_XML_URL, **params)
         if(click_type == "DOUBLE"):
-            params = generate_params(serial_number, click_type, spoof)
+            params = generate_params(button.double_press_action, spoof)
             result = send_message(settings.TWILIO_DEFAULT_TEXT_MESSAGE, **params)
         if(click_type == "LONG"):
-            params = generate_params(serial_number, click_type, spoof)
+            params = generate_params(button.long_press_action, spoof)
             result = create_call(settings.TWILIO_DEFAULT_XML_URL, **params)
     except Exception as e:
-        print(e)
         raise Exception(e)
 
     if(int(battery_voltage[:-2]) < 250):
