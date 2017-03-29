@@ -13,3 +13,12 @@ TWILIO_MAGIC_NUMBER_UNAVAILABLE = '+15005550000' # This phone number is unavaila
 TWILIO_MAGIC_NUMBER_INVALID = '+15005550001' # This phone number is invalid.
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Who gets an email when the site breaks?
+ADMINS = [('Name', 'your@email.com')]
+
+# Who gets broken link notifications (WTF?)
+MANAGERS = [('Name', 'your@email.com')]
+
+# Debugging Settings
+DEBUG = True
