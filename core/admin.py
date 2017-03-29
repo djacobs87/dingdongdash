@@ -43,7 +43,7 @@ admin.site.register(ButtonAction, ButtonActionAdmin)
 
 class PhoneAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
-        if(request.user.is_staff):
+        if(request.user.is_superuser):
             return Phone.objects.all()
         return Phone.objects.filter(user=request.user)
 
@@ -57,7 +57,7 @@ admin.site.register(Phone, PhoneAdmin)
 
 # Function and Base class for all modified ModelAdmin
 def get_model_perms(self, request):
-    if not request.user.is_staff:
+    if not request.user.is_superuser:
         return {}
 
     return {

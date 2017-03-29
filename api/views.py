@@ -17,9 +17,6 @@ def process_button(request):
             spoof=spoof
         )
 
-        if hasattr(result, 'rider'):
-            return HttpResponse(result.rider, status=207)
-
-        return HttpResponse('Success')
+        return HttpResponse(result)
     except Exception as e:
         return HttpResponse(e, status=400)

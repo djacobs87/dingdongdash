@@ -9,6 +9,8 @@ from core.models import Button
 def generate_params(button_action, spoof, **kwargs):
     params = {}
 
+    params['type'] = button_action.type
+
     if(spoof):
         params['account_sid'] = kwargs.get('account_sid', settings.TWILIO_TEST_ACCOUNT_SID)
         params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_TEST_AUTH_TOKEN)
@@ -29,23 +31,41 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
     except Button.DoesNotExist as e:
         raise ObjectDoesNotExist(e)
 
+    request_queue = []
+    result_ledger = []
+
     try:
         if(click_type == "SINGLE"):
-            params = generate_params(button.single_press_action, spoof)
-            result = create_call(settings.TWILIO_DEFAULT_XML_URL, **params)
+            for button_action in button.single_press_actions.all():
+                request_queue.append(generate_params(button_action, spoof))
         if(click_type == "DOUBLE"):
-            params = generate_params(button.double_press_action, spoof)
-            result = send_message(settings.TWILIO_DEFAULT_TEXT_MESSAGE, **params)
+            for button_action in button.double_press_actions.all():
+                request_queue.append(generate_params(button_action, spoof))
         if(click_type == "LONG"):
-            params = generate_params(button.long_press_action, spoof)
-            result = create_call(settings.TWILIO_DEFAULT_XML_URL, **params)
+            for button_action in button.long_press_actions.all():
+                request_queue.append(generate_params(button_action, spoof))
+
+        if len(request_queue) == 0:
+            raise Exception("No Action Taken")
+
+        for request in request_queue:
+            type = request.pop('type')
+
+            if type == "call":
+                result_ledger.append(create_call(settings.TWILIO_DEFAULT_XML_URL, **request))
+            elif type == "message":
+                result_ledger.append(send_message(settings.TWILIO_DEFAULT_TEXT_MESSAGE, **request))
+            else:
+                raise Exception("Unsupported action type")
+
+        result = {}
+        result['ledger'] = result_ledger
+        if(int(battery_voltage[:-2]) < 250):
+            result['rider'] = "Low Battery!"
+
+        return result
     except Exception as e:
         raise Exception(e)
-
-    if(int(battery_voltage[:-2]) < 250):
-        result.rider = "Low Battery!"
-
-    return result
 
 
 # https://www.twilio.com/docs/api/rest/call#instance-properties

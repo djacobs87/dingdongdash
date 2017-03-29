@@ -12,11 +12,11 @@ class PrimaryUseTestCase(TestCase):
                                               email='user1@test.com',
                                               password='abc123!@#')
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
-        self.button_action1 = ButtonAction.objects.create(name="Call User1", phone=self.phone)
-        self.button_action2 = ButtonAction.objects.create(name="Text User1", phone=self.phone)
-        self.button = Button.objects.create(serial_number="fooofooodoggdogg",
-                                            single_press_action=self.button_action1,
-                                            double_press_action=self.button_action2)
+        self.button = Button.objects.create(serial_number="fooofooodoggdogg")
+        self.button.single_press_actions.add(
+            ButtonAction.objects.create(name="Call User1", phone=self.phone))
+        self.button.double_press_actions.add(
+             ButtonAction.objects.create(name="Text User1", phone=self.phone))
 
     def tearDown(self):
         self.button.delete()
@@ -29,7 +29,7 @@ class PrimaryUseTestCase(TestCase):
             'clickType': [u'SINGLE']
         })
 
-        self.assertEquals(response.status_code, 207)
+        self.assertEquals(response.status_code, 200)
 
     def test_process_button_unknown(self):
         response = self.client.post('/api/functions/process_button/', {

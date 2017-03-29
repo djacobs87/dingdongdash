@@ -11,19 +11,19 @@ BUTTON_ACTION_CHOICES = [
 
 
 class Phone(models.Model):
-    phone_number = models.CharField(max_length=15, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    phone_number = models.CharField(max_length=15)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
 
-    def __str__(self):
+    def __unicode__(self):
         return '%s (%s)' % (self.phone_number, self.user)
 
 
 class ButtonAction(models.Model):
-    name = models.CharField(max_length=128, null=True)
-    action = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    phone = models.ForeignKey(Phone, on_delete=models.DO_NOTHING, null=False)
+    name = models.CharField(max_length=128)
+    type = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
+    phone = models.ForeignKey(Phone, on_delete=models.DO_NOTHING, related_name="phone")
 
-    def __str__(self):
+    def __unicode__(self):
         if self.name:
             return self.name
 
@@ -35,24 +35,22 @@ class Button(models.Model):
     DP = "DOUBLE"
     LP = "LONG"
 
-    name = models.CharField(max_length=64, null=True)
-    description = models.CharField(max_length=128, null=True)
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=128)
     serial_number = models.CharField(max_length=16, unique=True)
-    single_press_action = models.ForeignKey(ButtonAction,
-                                            on_delete=models.CASCADE,
-                                            null=True,
-                                            related_name="single_press_action")
-    double_press_action = models.ForeignKey(ButtonAction,
-                                            on_delete=models.CASCADE,
-                                            null=True,
-                                            related_name="double_press_action")
-    long_press_action = models.ForeignKey(ButtonAction,
-                                          on_delete=models.CASCADE,
-                                          null=True,
-                                          related_name="long_press_action")
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    single_press_actions = models.ManyToManyField(ButtonAction,
+                                                  related_name="single_press_actions")
+    double_press_actions = models.ManyToManyField(ButtonAction,
+                                                  related_name="double_press_actions")
+    long_press_actions = models.ManyToManyField(ButtonAction,
+                                                related_name="long_press_actions")
+    organization = models.ForeignKey(Organization,
+                                     on_delete=models.CASCADE,
+                                     blank=True,
+                                     null=True,
+                                     related_name="organization")
 
-    def __str__(self):
+    def __unicode__(self):
         if self.name:
             return self.name
 
