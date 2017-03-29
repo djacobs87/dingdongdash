@@ -10,6 +10,14 @@ def generate_params(button_action, spoof, **kwargs):
     params = {}
 
     params['type'] = button_action.type
+    params['message'] = ''
+
+    if params['type'] == "call":
+        url_template = "http://twimlets.com/echo?Twiml=<Response><Say>%s</Say></Response>"
+        url = url_template % button_action.message
+        params['message'] = url
+    if params['type'] == 'message':
+        params['message'] = button_action.message
 
     if(spoof):
         params['account_sid'] = kwargs.get('account_sid', settings.TWILIO_TEST_ACCOUNT_SID)
@@ -52,9 +60,9 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
             type = request.pop('type')
 
             if type == "call":
-                result_ledger.append(create_call(settings.TWILIO_DEFAULT_XML_URL, **request))
+                result_ledger.append(create_call(**request))
             elif type == "message":
-                result_ledger.append(send_message(settings.TWILIO_DEFAULT_TEXT_MESSAGE, **request))
+                result_ledger.append(send_message(**request))
             else:
                 raise Exception("Unsupported action type")
 
@@ -69,10 +77,10 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
 
 
 # https://www.twilio.com/docs/api/rest/call#instance-properties
-def create_call(script_url, **kwargs):
+def create_call(**kwargs):
     try:
         client = TwilioRestClient(kwargs['account_sid'], kwargs['auth_token'])
-        call = client.calls.create(url=script_url,
+        call = client.calls.create(url=kwargs['message'],
                                    to=kwargs['to_number'],
                                    from_=kwargs['from_number'],
                                    method="GET")
@@ -84,10 +92,10 @@ def create_call(script_url, **kwargs):
 
 
 # https://www.twilio.com/docs/api/rest/message#instance-properties
-def send_message(body, **kwargs):
+def send_message(**kwargs):
     try:
         client = TwilioRestClient(kwargs['account_sid'], kwargs['auth_token'])
-        message = client.messages.create(body=body,
+        message = client.messages.create(body=kwargs['message'],
                                          to=kwargs['to_number'],
                                          from_=kwargs['from_number'],
                                          method="GET")

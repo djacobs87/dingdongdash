@@ -163,3 +163,32 @@ class AdminTestCase(TestCase):
             'delete': True
         })
         self.assertEqual(dddma.get_model_perms(self.non_superuser_request), {})
+
+
+class ModelRepresentationTestCase(TestCase):
+    def test_button_unicode(self):
+        button = Button.objects.create(serial_number="1111222233334444")
+        self.assertEqual(unicode(button), "1111222233334444")
+        button.name = "Test Name"
+        self.assertEqual(unicode(button), "Test Name")
+        button.delete()
+
+    def test_button_action_unicode(self):
+        user = User.objects.create_user(username='user1',
+                                        email='user1@test.com',
+                                        password='abc123!@#')
+        phone = Phone.objects.create(phone_number="+12223334444", user=user)
+        button_action = ButtonAction.objects.create(type="call", phone=phone)
+        self.assertEqual(unicode(button_action), "call")
+        button_action.name = "Test Action"
+        self.assertEqual(unicode(button_action), "Test Action")
+        button_action.delete()
+        phone.delete()
+        user.delete()
+
+    def test_phone_unicode(self):
+        user = User.objects.create_user(username='user1',
+                                        email='user1@test.com',
+                                        password='abc123!@#')
+        phone = Phone.objects.create(phone_number="+12223334444", user=user)
+        self.assertEqual(unicode(phone), "+12223334444 (user1)")

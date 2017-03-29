@@ -28,7 +28,7 @@ class ButtonAction(models.Model):
         if self.name:
             return self.name
 
-        return self.action
+        return self.type
 
 
 class Button(models.Model):
