@@ -13,9 +13,8 @@ def generate_params(button_action, spoof, **kwargs):
     params['message'] = ''
 
     if params['type'] == "call":
-        url_template = "http://twimlets.com/echo?Twiml=<Response><Say>%s</Say></Response>"
-        url = url_template % button_action.message
-        params['message'] = url
+        url = "https://ding-dong-ditch-aphelionz.c9users.io/api/actions/%s/script.xml"
+        params['message'] = url % button_action.id
     if params['type'] == 'message':
         params['message'] = button_action.message
 

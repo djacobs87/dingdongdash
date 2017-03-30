@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 
 import core.functions as ddd
+from core.models import ButtonAction
 
 
 def process_button(request):
@@ -17,8 +18,16 @@ def process_button(request):
             spoof=spoof
         )
 
-        response = HttpResponse(result)
-    except Exception as result:
-        response = HttpResponse(result, status=400)
+        return HttpResponse(result)
 
-    return response
+    except Exception as result:
+        return HttpResponse(result, status=400)
+
+
+def generate_action_xml_script(request, action_id):
+    try:
+        action = ButtonAction.objects.get(id=action_id)
+        xml = "<Response><Say>%s</Say></Response>" % action.message
+        return HttpResponse(xml, content_type='text/xml')
+    except Exception as result:
+        return HttpResponse(result, status=400)
