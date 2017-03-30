@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 
@@ -14,9 +16,15 @@ class PrimaryUseTestCase(TestCase):
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
         self.button = Button.objects.create(serial_number="fooofooodoggdogg")
         self.button.single_press_actions.add(
-            ButtonAction.objects.create(name="Call User1", phone=self.phone))
+            ButtonAction.objects.create(type="call",
+                                        name="Call User1",
+                                        phone=self.phone,
+                                        message="Testing 123"))
         self.button.double_press_actions.add(
-             ButtonAction.objects.create(name="Text User1", phone=self.phone))
+             ButtonAction.objects.create(type="message",
+                                         name="Text User1",
+                                         phone=self.phone,
+                                         message="Testing 123"))
 
     def tearDown(self):
         self.button.delete()
@@ -32,14 +40,19 @@ class PrimaryUseTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_process_button_unknown(self):
-        response = self.client.post('/api/functions/process_button/', {
-            'spoof': True,
-            'batteryVoltage': [u'1546mV'],
-            'serialNumber': [u'1111222233334444'],
-            'clickType': [u'SINGLE']
-        })
+        try:
+            with transaction.atomic():
+                self.client.post('/api/functions/process_button/', {
+                    'spoof': True,
+                    'batteryVoltage': [u'1546mV'],
+                    'serialNumber': [u'1111222233334444'],
+                    'clickType': [u'SINGLE']
+                })
+        except Exception:
+            self.assertEquals(True, True)
+            return
 
-        self.assertEquals(response.status_code, 400)
+        self.fail()
 
     def test_process_button_single(self):
         response = self.client.post('/api/functions/process_button/', {
@@ -62,14 +75,19 @@ class PrimaryUseTestCase(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_process_button_long(self):
-        response = self.client.post('/api/functions/process_button/', {
-            'spoof': True,
-            'batteryVoltage': [u'1546mV'],
-            'serialNumber': [u'fooofooodoggdogg'],
-            'clickType': [u'LONG']
-        })
+        try:
+            with transaction.atomic():
+                self.client.post('/api/functions/process_button/', {
+                    'spoof': True,
+                    'batteryVoltage': [u'1546mV'],
+                    'serialNumber': [u'fooofooodoggdogg'],
+                    'clickType': [u'LONG']
+                })
+        except Exception:
+            self.assertEquals(True, True)
+            return
 
-        self.assertEquals(response.status_code, 400)
+        self.fail()
 
     def test_non_post_request(self):
         response = self.client.get('/api/functions/process_button/', {})

@@ -65,12 +65,20 @@ class APILog(models.Model):
     datetime = models.DateTimeField()
     request = JSONField()
     response = JSONField()
+    meta = JSONField()
 
     def __unicode__(self):
         return str(self.datetime)
 
     @staticmethod
-    def log(request, response):
+    def log(request, response, **kwargs):
         APILog.objects.create(datetime=timezone.now(),
-                              request=request,
-                              response=response)
+                              request={
+                                  "scheme": request.scheme,
+                                  "POST": request.POST
+                              },
+                              response={
+                                  "status": response.status_code,
+                                  "content": response.content
+                              },
+                              meta=kwargs)

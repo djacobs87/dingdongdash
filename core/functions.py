@@ -59,9 +59,11 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
             type = request.pop('type')
 
             if type == "call":
-                result_ledger.append(create_call(**request))
+                call = create_call(**request)
+                result_ledger.append(call.uri)
             elif type == "message":
-                result_ledger.append(send_message(**request))
+                message = send_message(**request)
+                result_ledger.append(message.uri)
             else:
                 raise Exception("Unsupported action type")
 

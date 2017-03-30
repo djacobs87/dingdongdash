@@ -24,7 +24,7 @@ def process_button(request):
     except Exception as result:
         response = HttpResponse(result, status=400)
 
-    APILog.log(request.POST, { "status": response.status_code })
+    APILog.log(request, response, site=site.name, result=result)
     return response
 
 
