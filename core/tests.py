@@ -19,9 +19,6 @@ class FunctionalTestCase(TestCase):
                                               email='user1@test.com',
                                               password='abc123!@#')
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
-        self.button_action1 = ButtonAction.objects.create(name="Call User1",
-                                                          phone=self.phone)
-
         self.button1 = Button.objects.create(serial_number="1111222233334444")
         self.button1.single_press_actions.add(
             ButtonAction.objects.create(name="Call User1", phone=self.phone))

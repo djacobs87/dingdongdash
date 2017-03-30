@@ -9,7 +9,7 @@ from organizations.models import Organization, OrganizationUser
 from schedule.models import CalendarRelation, Rule, Occurrence, Event
 from schedule.admin import CalendarAdminOptions
 
-from .models import Button, ButtonAction, Phone
+from .models import APILog, Button, ButtonAction, Phone
 
 
 ##
@@ -51,9 +51,18 @@ class PhoneAdmin(admin.ModelAdmin):
 admin.site.register(Phone, PhoneAdmin)
 
 
+class APILogAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        return APILog.objects.all()
+
+
+admin.site.register(APILog, APILogAdmin)
+
+
 ##
 # Removals and Modifications of Third Party Models
 ##
+
 
 # Function and Base class for all modified ModelAdmin
 def get_model_perms(self, request):
@@ -71,8 +80,9 @@ class DDDModelAdmin(admin.ModelAdmin):
     pass
 
 
-CalendarAdminOptions.get_model_perms = get_model_perms
 DDDModelAdmin.get_model_perms = get_model_perms
+
+CalendarAdminOptions.get_model_perms = get_model_perms
 EmailAddressAdmin.get_model_perms = get_model_perms
 GroupAdmin.get_model_perms = get_model_perms
 SiteAdmin.get_model_perms = get_model_perms

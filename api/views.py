@@ -17,6 +17,8 @@ def process_button(request):
             spoof=spoof
         )
 
-        return HttpResponse(result)
-    except Exception as e:
-        return HttpResponse(e, status=400)
+        response = HttpResponse(result)
+    except Exception as result:
+        response = HttpResponse(result, status=400)
+
+    return response

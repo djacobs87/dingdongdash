@@ -1,8 +1,11 @@
 from __future__ import unicode_literals
-from organizations.models import Organization
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
+from django.utils import timezone
+
+from organizations.models import Organization
 
 BUTTON_ACTION_CHOICES = [
     ('message', 'Send SMS Message'),
@@ -21,7 +24,7 @@ class Phone(models.Model):
 class ButtonAction(models.Model):
     name = models.CharField(max_length=128)
     type = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    phone = models.ForeignKey(Phone, on_delete=models.DO_NOTHING, related_name="phone")
+    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="phone")
     message = models.TextField()
 
     def __unicode__(self):
@@ -56,3 +59,18 @@ class Button(models.Model):
             return self.name
 
         return self.serial_number
+
+
+class APILog(models.Model):
+    datetime = models.DateTimeField()
+    request = JSONField()
+    response = JSONField()
+
+    def __unicode__(self):
+        return self.id
+
+    @staticmethod
+    def log(request, response):
+        APILog.objects.create(datetime=timezone.now,
+                              request=request,
+                              response=response)
