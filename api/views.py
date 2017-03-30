@@ -1,7 +1,8 @@
 from django.http import HttpResponse
+from django.contrib.sites.shortcuts import get_current_site
 
 import core.functions as ddd
-from core.models import ButtonAction
+from core.models import APILog, ButtonAction
 
 
 def process_button(request):
@@ -9,6 +10,7 @@ def process_button(request):
         return HttpResponse("Method not allowed", status=400)
 
     spoof = request.POST.get('spoof', False)
+    site = get_current_site(request)
 
     try:
         result = ddd.process_button(
@@ -18,10 +20,12 @@ def process_button(request):
             spoof=spoof
         )
 
-        return HttpResponse(result)
-
+        response = HttpResponse(result)
     except Exception as result:
-        return HttpResponse(result, status=400)
+        response = HttpResponse(result, status=400)
+
+    APILog.log(request.POST, { "status": response.status_code })
+    return response
 
 
 def generate_action_xml_script(request, action_id):
