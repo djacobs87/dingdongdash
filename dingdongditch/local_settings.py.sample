@@ -1,6 +1,9 @@
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Database ID of site
+SITE_ID = 1
+
 TWILIO_ACCOUNT_SID = '' # Production Account SID
 TWILIO_AUTH_TOKEN = '' # Production Auth Token
 TWILIO_TEST_ACCOUNT_SID = '' # Test Account SID

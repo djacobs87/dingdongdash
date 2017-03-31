@@ -25,8 +25,6 @@ SECRET_KEY = 'm@10sn2v6-2n5215ts43c4m!zpi)%e5op7ikvx^u8ph2+78gd+'
 ALLOWED_HOSTS = []
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SITE_ID = 1
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -36,9 +34,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'compat',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'hijack',
+    'hijack_admin',
     'organizations',
     'schedule',
     'api',
@@ -133,6 +134,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 LOGIN_REDIRECT_URL = "/dashboard"
+
+
+# settings.py
+HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'  # Where admins are redirected to after hijacking a user
+HIJACK_LOGOUT_REDIRECT_URL = '/dashboard/auth/user/'  # Where admins are redirected to after releasing a user
+HIJACK_ALLOW_GET_REQUESTS = True
 
 try:
     from local_settings import *

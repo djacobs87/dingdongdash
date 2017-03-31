@@ -33,6 +33,10 @@ class ButtonAction(models.Model):
 
         return self.type
 
+    class Meta:
+        verbose_name = 'Action'
+        verbose_name_plural = 'Actions'
+
 
 class Button(models.Model):
     SP = "SINGLE"
@@ -68,17 +72,24 @@ class APILog(models.Model):
     meta = JSONField()
 
     def __unicode__(self):
-        return str(self.datetime)
+        path = self.request.get('path', '')
+        serial_number = self.request.get('POST', {}).get('serialNumber', '')
+        return "%s %s %s" % (str(self.datetime), path, serial_number)
 
     @staticmethod
     def log(request, response, **kwargs):
         APILog.objects.create(datetime=timezone.now(),
                               request={
                                   "scheme": request.scheme,
-                                  "POST": request.POST
+                                  "POST": request.POST,
+                                  "path": request.path
                               },
                               response={
                                   "status": response.status_code,
                                   "content": response.content
                               },
                               meta=kwargs)
+
+    class Meta:
+        verbose_name = 'API Log'
+        verbose_name_plural = 'API Logs'

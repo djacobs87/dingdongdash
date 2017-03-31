@@ -2,13 +2,14 @@
 # import pytz
 
 from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 from django.test import TestCase
 
 from .functions import process_button
 from .models import Button, ButtonAction, Phone
 
 from django.contrib.admin.sites import AdminSite
-from .admin import ButtonAdmin, PhoneAdmin, DDDModelAdmin
+from .admin import ButtonAdmin, PhoneAdmin, DDDModelAdmin, EmailAddressInlineAdmin
 
 from organizations.models import Organization, OrganizationUser
 
@@ -160,6 +161,10 @@ class AdminTestCase(TestCase):
             'delete': True
         })
         self.assertEqual(dddma.get_model_perms(self.non_superuser_request), {})
+
+    def test_get_user_emails_inline(self):
+        ua = UserAdmin(User, self.site)
+        self.assertEqual(ua.inlines, [EmailAddressInlineAdmin])
 
 
 class ModelRepresentationTestCase(TestCase):

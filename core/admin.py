@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.sites.admin import SiteAdmin
 
+from allauth.account.models import EmailAddress
 from allauth.account.admin import EmailAddressAdmin
 from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from organizations.admin import OrganizationUserAdmin, OrganizationOwnerAdmin
@@ -83,11 +84,16 @@ class DDDModelAdmin(admin.ModelAdmin):
 DDDModelAdmin.get_model_perms = get_model_perms
 
 CalendarAdminOptions.get_model_perms = get_model_perms
-EmailAddressAdmin.get_model_perms = get_model_perms
 GroupAdmin.get_model_perms = get_model_perms
 SiteAdmin.get_model_perms = get_model_perms
-UserAdmin.get_model_perms = get_model_perms
 
+
+class EmailAddressInlineAdmin(admin.TabularInline):
+    model = EmailAddress
+
+
+UserAdmin.get_model_perms = get_model_perms
+UserAdmin.inlines = [EmailAddressInlineAdmin]
 
 admin.site.unregister(CalendarRelation)
 admin.site.register(CalendarRelation, DDDModelAdmin)
@@ -118,3 +124,4 @@ OrganizationOwnerAdmin.get_model_perms = get_model_perms
 admin.site.unregister(SocialAccount)
 admin.site.unregister(SocialApp)
 admin.site.unregister(SocialToken)
+admin.site.unregister(EmailAddress)
