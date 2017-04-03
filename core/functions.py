@@ -27,7 +27,7 @@ def generate_params(button_action, spoof, **kwargs):
         params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_AUTH_TOKEN)
         params['from_number'] = kwargs.get('from_number', settings.TWILIO_FROM_NUMBER)
 
-    params['to_number'] = button_action.phone.phone_number
+    params['to_number'] = button_action.target_user.phone_number
 
     return params
 

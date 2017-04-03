@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Say voice="alice">Hi, do you have a minute?</Say>
-    <Pause length="3" />
-    <Say voice="alice">Okay I won't keep you long.</Say>
-    <Pause length="5" />
-</Response>

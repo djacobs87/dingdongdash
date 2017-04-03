@@ -3,14 +3,13 @@ from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.sites.admin import SiteAdmin
 
 from allauth.account.models import EmailAddress
-from allauth.account.admin import EmailAddressAdmin
 from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from organizations.admin import OrganizationUserAdmin, OrganizationOwnerAdmin
-from organizations.models import Organization, OrganizationUser
+from organizations.models import Organization, OrganizationUser, OrganizationOwner
 from schedule.models import CalendarRelation, Rule, Occurrence, Event
 from schedule.admin import CalendarAdminOptions
 
-from .models import APILog, Button, ButtonAction, Phone
+from ..models import APILog, Button, ButtonAction, Phone
 
 
 ##
@@ -64,12 +63,7 @@ admin.site.register(APILog, APILogAdmin)
 # Removals and Modifications of Third Party Models
 ##
 
-
-# Function and Base class for all modified ModelAdmin
-def get_model_perms(self, request):
-    if not request.user.is_superuser:
-        return {}
-
+def get_default_permissions(self, request):
     return {
         'add': self.has_add_permission(request),
         'change': self.has_change_permission(request),
@@ -77,22 +71,37 @@ def get_model_perms(self, request):
     }
 
 
+# Function and Base class for all modified ModelAdmin
+def get_model_perms_superuser(self, request):
+    if not request.user.is_superuser:
+        return {}
+
+    return get_default_permissions(self, request)
+
+
+def get_model_perms_organization_owner(self, request):
+    if OrganizationOwner.objects.filter(organization_user__user=request.user).exists():
+        return get_default_permissions(self, request)
+
+    return {}
+
+
 class DDDModelAdmin(admin.ModelAdmin):
     pass
 
 
-DDDModelAdmin.get_model_perms = get_model_perms
+DDDModelAdmin.get_model_perms = get_model_perms_superuser
 
-CalendarAdminOptions.get_model_perms = get_model_perms
-GroupAdmin.get_model_perms = get_model_perms
-SiteAdmin.get_model_perms = get_model_perms
+CalendarAdminOptions.get_model_perms = get_model_perms_superuser
+GroupAdmin.get_model_perms = get_model_perms_superuser
+SiteAdmin.get_model_perms = get_model_perms_superuser
 
 
 class EmailAddressInlineAdmin(admin.TabularInline):
     model = EmailAddress
 
 
-UserAdmin.get_model_perms = get_model_perms
+UserAdmin.get_model_perms = get_model_perms_superuser
 UserAdmin.inlines = [EmailAddressInlineAdmin]
 
 admin.site.unregister(CalendarRelation)
@@ -111,14 +120,24 @@ admin.site.unregister(Organization)
 
 
 class OrganizationAdmin(admin.ModelAdmin):
-    pass
+    def get_readonly_fields(self, request, obj=None):
+        if not request.user.is_superuser:
+            return ('serial_number', 'organization',)
+
+        return super(ButtonAdmin, self).get_readonly_fields(request, obj)
+
+    def get_queryset(self, request):
+        if(request.user.is_superuser):
+            return Organization.objects.all()
+
+        return Organization.objects.filter(owner__organization_user__user=request.user)
 
 
 admin.site.register(Organization, OrganizationAdmin)
 
-OrganizationAdmin.get_model_perms = get_model_perms
-OrganizationUserAdmin.get_model_perms = get_model_perms
-OrganizationOwnerAdmin.get_model_perms = get_model_perms
+OrganizationAdmin.get_model_perms = get_model_perms_organization_owner
+OrganizationUserAdmin.get_model_perms = get_model_perms_organization_owner
+OrganizationOwnerAdmin.get_model_perms = get_model_perms_organization_owner
 
 
 admin.site.unregister(SocialAccount)

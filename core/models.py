@@ -9,7 +9,8 @@ from organizations.models import Organization
 
 BUTTON_ACTION_CHOICES = [
     ('message', 'Send SMS Message'),
-    ('call', "Make Voice Call")
+    ('call', "Make Voice Call"),
+    ('email', "Send Email")
 ]
 
 
@@ -24,18 +25,18 @@ class Phone(models.Model):
 class ButtonAction(models.Model):
     name = models.CharField(max_length=128)
     type = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="phone")
+    target_user = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name="phone")
     message = models.TextField()
+
+    class Meta:
+        verbose_name = 'Action'
+        verbose_name_plural = 'Actions'
 
     def __unicode__(self):
         if self.name:
             return self.name
 
         return self.type
-
-    class Meta:
-        verbose_name = 'Action'
-        verbose_name_plural = 'Actions'
 
 
 class Button(models.Model):
@@ -71,6 +72,10 @@ class APILog(models.Model):
     response = JSONField()
     meta = JSONField()
 
+    class Meta:
+        verbose_name = 'API Log'
+        verbose_name_plural = 'API Logs'
+
     def __unicode__(self):
         path = self.request.get('path', '')
         serial_number = self.request.get('POST', {}).get('serialNumber', '')
@@ -89,7 +94,3 @@ class APILog(models.Model):
                                   "content": response.content
                               },
                               meta=kwargs)
-
-    class Meta:
-        verbose_name = 'API Log'
-        verbose_name_plural = 'API Logs'

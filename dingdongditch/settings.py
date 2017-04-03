@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'schedule',
     'api',
     'core',
+    'core.admin',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -136,9 +137,11 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 LOGIN_REDIRECT_URL = "/dashboard"
 
 
-# settings.py
-HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'  # Where admins are redirected to after hijacking a user
-HIJACK_LOGOUT_REDIRECT_URL = '/dashboard/auth/user/'  # Where admins are redirected to after releasing a user
+# Where admins are redirected to after hijacking a user
+HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'
+
+# Where admins are redirected to after releasing a user
+HIJACK_LOGOUT_REDIRECT_URL = '/dashboard/auth/user/'
 HIJACK_ALLOW_GET_REQUESTS = True
 
 try:

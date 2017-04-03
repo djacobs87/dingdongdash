@@ -18,12 +18,12 @@ class PrimaryUseTestCase(TestCase):
         self.button.single_press_actions.add(
             ButtonAction.objects.create(type="call",
                                         name="Call User1",
-                                        phone=self.phone,
+                                        target_user=self.phone,
                                         message="Testing 123"))
         self.button.double_press_actions.add(
              ButtonAction.objects.create(type="message",
                                          name="Text User1",
-                                         phone=self.phone,
+                                         target_user=self.phone,
                                          message="Testing 123"))
 
     def tearDown(self):
