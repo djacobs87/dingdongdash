@@ -112,4 +112,12 @@ class AdminTestCase(TestCase):
                          list(Organization.objects.all()))
         self.assertEqual(list(oa.get_queryset(non_superuser_request)),
                          list(Organization.objects.filter(
-                             owner__organization_user__user=self.user1)))
+                              owner__organization_user__user=self.user1)))
+
+    def test_organization_hidden_and_readonly_fields(self):
+        non_superuser_request = MockRequest()
+        non_superuser_request.user = self.user1
+
+        oa = OrganizationAdmin(Organization, self.site)
+        self.assertEqual(oa.get_readonly_fields(self.superuser_request), ())
+        self.assertEqual(oa.get_readonly_fields(non_superuser_request), ('slug',))

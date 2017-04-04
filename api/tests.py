@@ -6,7 +6,7 @@ from django.test import Client, TestCase
 from core.models import Button, ButtonAction, Phone
 
 
-class PrimaryUseTestCase(TestCase):
+class ProcessButtonTestCase(TestCase):
     def setUp(self):
         self.client = Client()
 
@@ -91,4 +91,19 @@ class PrimaryUseTestCase(TestCase):
 
     def test_non_post_request(self):
         response = self.client.get('/api/functions/process_button/', {})
+        self.assertEquals(response.status_code, 400)
+
+
+class GenerateXMLScriptTestCase(TestCase):
+    def test_script_generation(self):
+        user1 = User.objects.create_user(username='User1',
+                                         email='user1@test.com',
+                                         password='abc123!@#')
+        phone = Phone.objects.create(phone_number="+19783284466", user=user1)
+        button_action = ButtonAction.objects.create(message="this is a test", target_user=phone)
+        response = self.client.get('/api/actions/%s/script.xml' % button_action.id)
+        self.assertEquals(response.status_code, 200)
+
+    def test_script_generation_error(self):
+        response = self.client.get('/api/actions/99999/script.xml')
         self.assertEquals(response.status_code, 400)

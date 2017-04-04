@@ -122,9 +122,9 @@ admin.site.unregister(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
-            return ('serial_number', 'organization',)
+            return ('slug',)
 
-        return super(ButtonAdmin, self).get_readonly_fields(request, obj)
+        return super(OrganizationAdmin, self).get_readonly_fields(request, obj)
 
     def get_queryset(self, request):
         if(request.user.is_superuser):
