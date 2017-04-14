@@ -7,12 +7,6 @@ from django.utils import timezone
 
 from organizations.models import Organization
 
-BUTTON_ACTION_CHOICES = [
-    ('message', 'Send SMS Message'),
-    ('call', "Make Voice Call"),
-    ('email', "Send Email")
-]
-
 
 class Phone(models.Model):
     phone_number = models.CharField(max_length=15)
@@ -20,6 +14,13 @@ class Phone(models.Model):
 
     def __unicode__(self):
         return '%s (%s)' % (self.phone_number, self.user)
+
+
+BUTTON_ACTION_CHOICES = [
+    ('message', 'Send SMS Message'),
+    ('call', "Make Voice Call"),
+    ('email', "Send Email")
+]
 
 
 class ButtonAction(models.Model):

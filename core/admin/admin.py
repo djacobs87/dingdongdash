@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.models import User
 from django.contrib.sites.admin import SiteAdmin
 
 from allauth.account.models import EmailAddress
@@ -35,7 +36,14 @@ admin.site.register(Button, ButtonAdmin)
 
 
 class ButtonActionAdmin(admin.ModelAdmin):
-    pass
+    def get_queryset(self, request):
+        if(request.user.is_superuser):
+            return ButtonAction.objects.all()
+
+        organizations = Organization.objects.filter(organization_users__user=request.user)
+        org_users = User.objects.filter(organizations_organization__in=organizations)
+        phones = Phone.objects.filter(user__in=org_users)
+        return ButtonAction.objects.filter(target_user__in=phones)
 
 
 admin.site.register(ButtonAction, ButtonActionAdmin)
@@ -45,7 +53,10 @@ class PhoneAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         if(request.user.is_superuser):
             return Phone.objects.all()
-        return Phone.objects.filter(user=request.user)
+
+        organizations = Organization.objects.filter(organization_users__user=request.user)
+        org_users = User.objects.filter(organizations_organization__in=organizations)
+        return Phone.objects.filter(user__in=org_users)
 
 
 admin.site.register(Phone, PhoneAdmin)

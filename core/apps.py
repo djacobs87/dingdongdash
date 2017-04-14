@@ -5,7 +5,7 @@ from django.apps import AppConfig
 
 class CoreConfig(AppConfig):
     name = 'core'
-    verbose_name = 'Ding Dong Ditch Core'
+    verbose_name = 'Core'
 
     def ready(self):
         from .signals import user_creation

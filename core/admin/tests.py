@@ -4,7 +4,7 @@ from django.test import TestCase
 from ..models import Button, ButtonAction, Phone
 
 from django.contrib.admin.sites import AdminSite
-from .admin import ButtonAdmin, PhoneAdmin, DDDModelAdmin, OrganizationAdmin
+from .admin import ButtonAdmin, PhoneAdmin, DDDModelAdmin, OrganizationAdmin, ButtonActionAdmin
 
 from organizations.models import Organization, OrganizationUser, OrganizationOwner
 
@@ -19,6 +19,9 @@ class MockSuperUser:
 
     def has_perm(self, perm):
         return True
+
+    def __trunc__(self):
+        return 1
 
 
 class MockNonSuperUser:
@@ -58,6 +61,10 @@ class AdminTestCase(TestCase):
         self.not_my_organization = Organization.objects.create(name='Not My Org')
         self.someone_elses_button = Button.objects.create(serial_number="5555666677778888",
                                                           organization=self.not_my_organization)
+        self.someone_elses_action = ButtonAction.objects.create(name="Not Mine",
+                                                                type="call",
+                                                                message="hi",
+                                                                target_user=self.not_my_phone)
 
         # Prep site and request stuff
         self.superuser_request = MockRequest()
@@ -121,3 +128,13 @@ class AdminTestCase(TestCase):
         oa = OrganizationAdmin(Organization, self.site)
         self.assertEqual(oa.get_readonly_fields(self.superuser_request), ())
         self.assertEqual(oa.get_readonly_fields(non_superuser_request), ('slug',))
+
+    def test_action_queryset(self):
+        non_superuser_request = MockRequest()
+        non_superuser_request.user = self.user1
+
+        ba = ButtonActionAdmin(ButtonAction, self.site)
+        self.assertEqual(list(ba.get_queryset(self.superuser_request)),
+                         list(ButtonAction.objects.all()))
+        self.assertEqual(list(ba.get_queryset(non_superuser_request)).sort(),
+                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())

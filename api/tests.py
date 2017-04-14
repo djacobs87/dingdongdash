@@ -1,6 +1,8 @@
 from django.db import transaction
 
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+
 from django.test import Client, TestCase
 
 from core.models import Button, ButtonAction, Phone
@@ -8,6 +10,8 @@ from core.models import Button, ButtonAction, Phone
 
 class ProcessButtonTestCase(TestCase):
     def setUp(self):
+        Site.objects.create(domain="testserver")
+
         self.client = Client()
 
         self.user1 = User.objects.create_user(username='User1',
