@@ -1,0 +1,66 @@
+try:
+    from settings import *
+except ImportError:
+    pass
+
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Production Account SID
+TWILIO_ACCOUNT_SID = ''
+
+# Production Auth Token
+TWILIO_AUTH_TOKEN = ''
+
+# Test Account SID
+TWILIO_TEST_ACCOUNT_SID = ''
+
+# Test Auth Token
+TWILIO_TEST_AUTH_TOKEN = ''
+
+# FROM Number for Twilio Integration
+TWILIO_FROM_NUMBER = '+##########'
+
+# XML for Voice Script
+TWILIO_DEFAULT_XML_URL = ''
+
+# From Number for Twilio Missives
+TWILIO_DEFAULT_TO_NUMBER = '+##########'
+
+# Default message sent by system.
+TWILIO_DEFAULT_TEXT_MESSAGE = 'This is a test of DDD!'
+
+# See https://www.twilio.com/docs/api/rest/test-credentials
+# This phone number is valid and available.
+TWILIO_MAGIC_NUMBER_AVAILABLE = '+15005550006'
+
+# This phone number is unavailable.
+TWILIO_MAGIC_NUMBER_UNAVAILABLE = '+15005550000'
+
+# This phone number is invalid.
+TWILIO_MAGIC_NUMBER_INVALID = '+15005550001'
+
+# Who gets an email when the site breaks?
+ADMINS = [('Name', 'your@email.com')]
+
+# Who gets broken link notifications (WTF?)
+MANAGERS = [('Name', 'your@email.com')]
+
+# Debugging Settings
+DEBUG = False
+
+# $link = pg_connect("host=localhost dbname=groceries user=ubuntu password=cloud9isawesome");
+
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'prod_dbname',
+        'USER': 'prod_username',
+        'PASSWORD': 'prod_password',
+        'HOST': 'prod_dbhost',
+        'PORT': '5432',
+    }
+}

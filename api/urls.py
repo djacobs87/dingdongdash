@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
-from views import process_button, generate_action_xml_script
+from .views import process_button, generate_action_xml_script
 
 urlpatterns = [
     url(r'^functions/process_button/', csrf_exempt(process_button)),
