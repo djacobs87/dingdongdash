@@ -1,4 +1,4 @@
-# ⠙⠙⠙ _(dingdongditch)_
+# ⠙⠙⠙ _(dingdongdash)_
 
 > Connect to Wi-Fi and ring any phone, any time with time and location based intelligence.
 
