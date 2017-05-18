@@ -9,7 +9,7 @@ from organizations.admin import OrganizationUserAdmin, OrganizationOwnerAdmin
 from organizations.models import Organization, OrganizationUser, OrganizationOwner
 from schedule.models import CalendarRelation, Rule, Occurrence, Event
 from schedule.admin import CalendarAdminOptions
-
+from import_export.admin import ImportExportModelAdmin
 from ..models import APILog, Button, ButtonAction, Phone
 
 
@@ -62,7 +62,7 @@ class PhoneAdmin(admin.ModelAdmin):
 admin.site.register(Phone, PhoneAdmin)
 
 
-class APILogAdmin(admin.ModelAdmin):
+class APILogAdmin(ImportExportModelAdmin):
     def get_queryset(self, request):
         return APILog.objects.all()
 

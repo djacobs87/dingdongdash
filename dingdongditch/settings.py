@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api',
     'core',
     'core.admin',
+    'import_export'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -143,6 +144,7 @@ HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'
 # Where admins are redirected to after releasing a user
 HIJACK_LOGOUT_REDIRECT_URL = '/dashboard/auth/user/'
 HIJACK_ALLOW_GET_REQUESTS = True
+
 
 try:
     from local_settings import *
