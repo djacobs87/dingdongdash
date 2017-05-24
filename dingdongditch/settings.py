@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
         },
     },
@@ -131,6 +132,13 @@ ALLOWED_HOSTS = [
     'ngy7i9skf2.execute-api.us-east-1.amazonaws.com',
     '127.0.0.1',
     'localhost'
+]
+
+GA_ID = 'UA-98007662-2'
+
+SETTINGS_EXPORT = [
+    'DEBUG',
+    'GA_ID',
 ]
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
