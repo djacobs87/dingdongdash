@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'm@10sn2v6-2n5215ts43c4m!zpi)%e5op7ikvx^u8ph2+78gd+'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [u'127.0.0.1']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
@@ -128,7 +128,9 @@ STATIC_ROOT = 'static'
 ALLOWED_HOSTS = [
     'testserver',
     'ding-dong-ditch-aphelionz.c9users.io',
-    'ngy7i9skf2.execute-api.us-east-1.amazonaws.com'
+    'ngy7i9skf2.execute-api.us-east-1.amazonaws.com',
+    '127.0.0.1',
+    'localhost'
 ]
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
