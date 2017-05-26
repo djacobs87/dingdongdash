@@ -22,7 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'm@10sn2v6-2n5215ts43c4m!zpi)%e5op7ikvx^u8ph2+78gd+'
 
-ALLOWED_HOSTS = [u'127.0.0.1']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
@@ -134,12 +133,6 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
-GA_ID = 'UA-98007662-2'
-
-SETTINGS_EXPORT = [
-    'DEBUG',
-    'GA_ID',
-]
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
@@ -147,6 +140,10 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 LOGIN_REDIRECT_URL = "/dashboard"
 
+SETTINGS_EXPORT = [
+    'DEBUG',
+    'GA_ID',
+]
 
 # Where admins are redirected to after hijacking a user
 HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'
