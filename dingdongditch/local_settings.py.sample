@@ -29,6 +29,9 @@ MANAGERS = [('Name', 'your@email.com')]
 # Debugging Settings
 DEBUG = True
 
+# Google Analytics ID
+GA_ID = 'UA-########-#'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
