@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 
+from shopify_webhook.decorators import webhook
+
 import core.functions as ddd
 from core.models import APILog, ButtonAction
 
@@ -35,3 +37,8 @@ def generate_action_xml_script(request, action_id):
         return HttpResponse(xml, content_type='text/xml')
     except Exception as result:
         return HttpResponse(result, status=400)
+
+@webhook
+def order_creation_webhook(request):
+    print(request)
+    pass

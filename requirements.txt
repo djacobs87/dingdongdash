@@ -33,6 +33,7 @@ django-lint==2.0.4
 django-organizations==0.9.1
 django-picklefield==0.3.2
 django-scheduler==0.8.3
+django-shopify-webhook==0.3.1
 django-storages==1.5.2
 docutils==0.13.1
 durationpy==0.4
