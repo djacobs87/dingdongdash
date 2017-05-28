@@ -38,7 +38,15 @@ def generate_action_xml_script(request, action_id):
     except Exception as result:
         return HttpResponse(result, status=400)
 
+
+def order_creation(request):
+    # Create User with default password
+        # note for later: user should be forced to change password
+    # Create Phone
+    # Send Email with Login Info to users
+    return HttpResponse("NOT IMPLEMENTED", status=501)
+
+
 @webhook
 def order_creation_webhook(request):
-    print(request)
-    pass
+    return order_creation(request)
