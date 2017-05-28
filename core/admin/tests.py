@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from django.db.models.fields.related import ManyToManyField
 
 from ..models import Button, ButtonAction, Phone
 
@@ -104,18 +103,18 @@ class AdminTestCase(TestCase):
             self.button1.single_press_actions.instance._meta.get_field("long_press_actions")
 
         single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
-                                          non_superuser_request,
-                                          **kwargs))
+                              non_superuser_request,
+                              **kwargs))
         double_press_field = (ba.formfield_for_manytomany(double_press_dbfield,
-                                          non_superuser_request,
-                                          **kwargs))
+                              non_superuser_request,
+                              **kwargs))
         long_press_field = (ba.formfield_for_manytomany(long_press_dbfield,
-                                          non_superuser_request,
-                                          **kwargs))
+                            non_superuser_request,
+                            **kwargs))
 
         superuser_single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
-                                          self.superuser_request,
-                                          **kwargs))
+                                        self.superuser_request,
+                                        **kwargs))
 
         self.assertEqual(list(superuser_single_press_field.queryset),
                          list(ButtonAction.objects.all()))
@@ -125,7 +124,6 @@ class AdminTestCase(TestCase):
                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
         self.assertEqual(list(long_press_field.queryset).sort(),
                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
-
 
     def test_phone_queryset(self):
         non_superuser_request = MockRequest()

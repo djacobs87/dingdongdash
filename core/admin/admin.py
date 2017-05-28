@@ -24,7 +24,7 @@ def _filter_button_actions(request):
     organizations = Organization.objects.filter(organization_users__user=request.user)
     org_users = User.objects.filter(organizations_organization__in=organizations)
     phones = Phone.objects.filter(user__in=org_users)
-    return  ButtonAction.objects.filter(target_user__in=phones)
+    return ButtonAction.objects.filter(target_user__in=phones)
 
 
 class ButtonAdmin(admin.ModelAdmin):
