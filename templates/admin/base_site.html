@@ -22,14 +22,12 @@
 }
 
 #user-tools {
-	font-size: 20px;
+	font-size: 13px;
+	line-height: 13px;
 	color: black;
 	letter-spacing: 0px;
 	margin-top: 25px;
 	margin-right: 25px;
-
-	display: flex;
-  	flex-flow: row wrap;
 }
 
 #view, #welcome, #password, #log-out {
@@ -44,8 +42,6 @@
 }
 
 h1#site-name{
-	margin-top: 15px;
-	margin-left: 60px;
 	font-size: 50px;
 }
 
@@ -54,13 +50,12 @@ h1#site-name{
 }
 
 body {
-	background-color: white;
-	color: red;	
+	font-family:Raleway, "Roboto", "Lucida Grande", Verdana, Arial, sans-serif
 	}
 
 h1 {
 	color: black;
-	font-family: "Helvetica", bold, helvetica;
+	font-family: Montserrat, Helvetica, sans-serif;
 	font-size: 2.85714em;
 	font-weight: 700;
 	margin-bottom: 30px;
@@ -76,16 +71,10 @@ th {
     border-bottom: 1px solid #eee;
     vertical-align: top;
     padding: 8px;
-    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
     font-weight: 600;
     text-align: left;
 }
 
-td {
-	padding: 10px;
-	border: solid;
-	border-color: black;
-}
 
 .module h2, .module caption, .inline-group h2 {
     margin-top: 0px;
@@ -130,9 +119,11 @@ a:focus, a:hover {
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="/" itemprop="url" class="site-header__logo-link display-table-cell">
-              <img src="//cdn.shopify.com/s/files/1/1352/8295/files/Logo_250x.jpg?v=1492818706" alt="⠙⠙⠙ Ding Dong Dash" itemprop="logo">
-            </a></a></h1>
+<h1 id="site-name">
+	<a href="/" itemprop="url" class="site-header__logo-link display-table-cell">
+    <img src="//cdn.shopify.com/s/files/1/1352/8295/files/Logo_250x.jpg?v=1492818706" alt="⠙⠙⠙ Ding Dong Dash" itemprop="logo">
+    </a>
+</h1>
 {% endblock %}
 {% load i18n static %}
 
@@ -146,10 +137,10 @@ a:focus, a:hover {
                 <strong>{% firstof user.get_short_name user.get_username %}</strong>.</div>
             {% endblock %}
             {% block userlinks %}
-                {% if site_url %}
+                <!-- {% if site_url %}
                 	<div id = "view">
                     <a href="{{ site_url }}">{% trans 'View site' %}</a></div>
-                {% endif %}
+                {% endif %} -->
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}
                     {% if docsroot %}
