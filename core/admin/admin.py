@@ -15,6 +15,16 @@ from ..models import APILog, Button, ButtonAction, Phone
 
 ##
 # Core Admin
+
+def _filter_button_actions(request):
+     if request.user.is_superuser:
+         return ButtonAction.objects.all()
+ 
+     organizations = Organization.objects.filter(organization_users__user=request.user)
+     org_users = User.objects.filter(organizations_organization__in=organizations)
+     phones = Phone.objects.filter(user__in=org_users)
+     return ButtonAction.objects.filter(target_user__in=phones)
+
 ##
 class ButtonAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
@@ -22,6 +32,10 @@ class ButtonAdmin(admin.ModelAdmin):
             return ('serial_number', 'organization',)
 
         return super(ButtonAdmin, self).get_readonly_fields(request, obj)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+         kwargs['queryset'] = _filter_button_actions(request)
+         return super(ButtonAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
     def get_queryset(self, request):
         if not request.user.is_superuser:
@@ -37,13 +51,8 @@ admin.site.register(Button, ButtonAdmin)
 
 class ButtonActionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
-        if(request.user.is_superuser):
-            return ButtonAction.objects.all()
+       return _filter_button_actions(request)
 
-        organizations = Organization.objects.filter(organization_users__user=request.user)
-        org_users = User.objects.filter(organizations_organization__in=organizations)
-        phones = Phone.objects.filter(user__in=org_users)
-        return ButtonAction.objects.filter(target_user__in=phones)
 
 
 admin.site.register(ButtonAction, ButtonActionAdmin)
@@ -73,6 +82,8 @@ admin.site.register(APILog, APILogAdmin)
 ##
 # Removals and Modifications of Third Party Models
 ##
+
+
 
 def get_default_permissions(self, request):
     return {
