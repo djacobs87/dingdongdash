@@ -91,6 +91,9 @@ def get_model_perms_superuser(self, request):
 
 
 def get_model_perms_organization_owner(self, request):
+    if request.user.is_superuser:
+        return get_default_permissions(self, request)
+
     if OrganizationOwner.objects.filter(organization_user__user=request.user).exists():
         return get_default_permissions(self, request)
 

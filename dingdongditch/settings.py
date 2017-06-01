@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'import_export'
 ]
 
+ORGS_SLUGFIELD = 'django_extensions.db.fields.AutoSlugField'
+
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -133,6 +135,7 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+ORGS_SLUGFIELD = 'django_extensions.db.fields.AutoSlugField'
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
