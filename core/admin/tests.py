@@ -91,39 +91,39 @@ class AdminTestCase(TestCase):
 
     def test_button_formfield_for_manytomany(self):
         non_superuser_request = MockRequest()
-         non_superuser_request.user = self.user1
- 
-         ba = ButtonAdmin(Button, self.site)
-         kwargs = {}
-         single_press_dbfield = \
-             self.button1.single_press_actions.instance._meta.get_field("single_press_actions")
-         double_press_dbfield = \
-             self.button1.single_press_actions.instance._meta.get_field("double_press_actions")
-         long_press_dbfield = \
-             self.button1.single_press_actions.instance._meta.get_field("long_press_actions")
- 
-         single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
-                               non_superuser_request,
-                               **kwargs))
-         double_press_field = (ba.formfield_for_manytomany(double_press_dbfield,
-                               non_superuser_request,
-                               **kwargs))
-         long_press_field = (ba.formfield_for_manytomany(long_press_dbfield,
-                             non_superuser_request,
-                             **kwargs))
- 
-         superuser_single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
-                                         self.superuser_request,
-                                         **kwargs))
- 
-         self.assertEqual(list(superuser_single_press_field.queryset),
-                          list(ButtonAction.objects.all()))
-         self.assertEqual(list(single_press_field.queryset).sort(),
-                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
-         self.assertEqual(list(double_press_field.queryset).sort(),
-                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
-         self.assertEqual(list(long_press_field.queryset).sort(),
-                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+        non_superuser_request.user = self.user1
+
+        ba = ButtonAdmin(Button, self.site)
+        kwargs = {}
+        single_press_dbfield = \
+            self.button1.single_press_actions.instance._meta.get_field("single_press_actions")
+        double_press_dbfield = \
+            self.button1.single_press_actions.instance._meta.get_field("double_press_actions")
+        long_press_dbfield = \
+            self.button1.single_press_actions.instance._meta.get_field("long_press_actions")
+
+        single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
+                              non_superuser_request,
+                              **kwargs))
+        double_press_field = (ba.formfield_for_manytomany(double_press_dbfield,
+                              non_superuser_request,
+                              **kwargs))
+        long_press_field = (ba.formfield_for_manytomany(long_press_dbfield,
+                            non_superuser_request,
+                            **kwargs))
+
+        superuser_single_press_field = (ba.formfield_for_manytomany(single_press_dbfield,
+                                        self.superuser_request,
+                                        **kwargs))
+
+        self.assertEqual(list(superuser_single_press_field.queryset),
+                         list(ButtonAction.objects.all()))
+        self.assertEqual(list(single_press_field.queryset).sort(),
+                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+        self.assertEqual(list(double_press_field.queryset).sort(),
+                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+        self.assertEqual(list(long_press_field.queryset).sort(),
+                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
 
     def test_phone_queryset(self):
         non_superuser_request = MockRequest()
