@@ -3,7 +3,135 @@
 
 {% block title %}{{ title }} | ⠙⠙⠙ Admin{% endblock %}
 
+{% block extrastyle %}
+<style>
+#header {
+    width: auto;
+    height: 150px;
+    padding: 10px 40px;
+    background: white;
+    line-height: 40px;
+    color: black;
+    overflow: visible;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: black;
+    margin-left: 50px;
+    float: left;
+}
+
+#user-tools {
+	font-size: 13px;
+	line-height: 13px;
+	color: black;
+	letter-spacing: 0px;
+	margin-top: 25px;
+	margin-right: 25px;
+}
+
+#view, #welcome, #password, #log-out {
+	padding: 12px;
+}
+
+#user-tools a:focus, #user-tools a:hover {
+    text-decoration: none;
+    border-bottom-color: black;
+    border-bottom-width: 2.5px;
+    color: lightgrey;
+}
+
+div.breadcrumbs {
+	background-color: black;
+	color: white;
+}
+
+h1#site-name{
+	font-size: 50px;
+}
+
+#header a:link, #header a:visited {
+    color: black;
+}
+
+body {
+	font-family:Raleway, "Roboto", "Lucida Grande", Verdana, Arial, sans-serif
+	}
+
+h1 {
+	color: black;
+	font-family: Montserrat, Helvetica, sans-serif;
+	font-size: 2.85714em;
+	font-weight: 700;
+	margin-bottom: 30px;
+}
+
+#content-main {
+    width: 100%;
+}
+
+th {
+    font-size: 17px;
+    line-height: 20px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    padding: 8px;
+    font-weight: 600;
+    text-align: left;
+}
+
+
+.module h2, .module caption, .inline-group h2 {
+    margin-top: 0px;
+    padding: 8px;
+    font-weight: 400;
+    font-size: 20px;
+    text-align: left;
+    background: lightgrey;
+    color: black;
+}
+
+a.section:link, a.section:visited {
+	color:black;
+}
+
+a:link, a:visited {
+    color: black;
+    text-decoration: none;
+}
+
+a:focus, a:hover {
+    color: black;
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: black;
+    color: white;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: black;
+    color: white;
+}
+
+.submit-row a.deletelink {
+    border: solid;
+    border-color: black;
+    background: red;
+    color: white;
+}
+
+.selector-chosen h2 {
+    background: black !important;
+    color: #fff;
+}
+
+</style>
+{% endblock %}
+
 {% block extrahead %}
+
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -14,11 +142,51 @@
   ga('send', 'pageview');
 
 </script>
+
+
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">⠙⠙⠙</a></h1>
+<h1 id="site-name">
+	<a href="/" itemprop="url" class="site-header__logo-link display-table-cell">
+    <img src="//cdn.shopify.com/s/files/1/1352/8295/files/Logo_250x.jpg?v=1492818706" alt="⠙⠙⠙ Ding Dong Dash" itemprop="logo">
+    </a>
+</h1>
 {% endblock %}
+{% load i18n static %}
+
+{% block usertools %}
+<div id = "menu">
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+            	<div id = "welcome">
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.</div>
+            {% endblock %}
+            {% block userlinks %}
+                <!-- {% if site_url %}
+                	<div id = "view">
+                    <a href="{{ site_url }}">{% trans 'View site' %}</a></div>
+                {% endif %} -->
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> 
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                	<div id = "password">
+                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> </div>
+                {% endif %}
+                	<div id = "log-out">
+                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></div>
+            {% endblock %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
 
 
 {% block nav-global %}{% hijack_notification %}{% endblock %}

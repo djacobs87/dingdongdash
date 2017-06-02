@@ -15,6 +15,16 @@ from ..models import APILog, Button, ButtonAction, Phone
 
 ##
 # Core Admin
+
+def _filter_button_actions(request):
+     if request.user.is_superuser:
+         return ButtonAction.objects.all()
+ 
+     organizations = Organization.objects.filter(organization_users__user=request.user)
+     org_users = User.objects.filter(organizations_organization__in=organizations)
+     phones = Phone.objects.filter(user__in=org_users)
+     return ButtonAction.objects.filter(target_user__in=phones)
+
 ##
 
 def _filter_button_actions(request):
@@ -83,6 +93,8 @@ admin.site.register(APILog, APILogAdmin)
 # Removals and Modifications of Third Party Models
 ##
 
+
+
 def get_default_permissions(self, request):
     return {
         'add': self.has_add_permission(request),
@@ -100,6 +112,9 @@ def get_model_perms_superuser(self, request):
 
 
 def get_model_perms_organization_owner(self, request):
+    if request.user.is_superuser:
+        return get_default_permissions(self, request)
+
     if OrganizationOwner.objects.filter(organization_user__user=request.user).exists():
         return get_default_permissions(self, request)
 
