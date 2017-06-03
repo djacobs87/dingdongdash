@@ -142,9 +142,32 @@ class ShopifyWebhookTestCase(TestCase):
             mock_request.body = f.read()
             response = order_creation(mock_request)
 
-            # Test to see appearance of new user
-            # Test new user forced to change pass
-            # Test to see appearance of new button
-            # Test Email Sent
+            # Test appearance of new user
+            self.assertEqual(len(User.objects.all()), 1)
 
+            # Test new user attributes
+            new_user = User.objects.first()
+            self.assertEqual(new_user.username, "john@test.com")
+            self.assertEqual(new_user.email, "john@test.com")
+
+            # Test new user forced to change pass
+            self.assertTrue(new_user.groups.filter(name='RequiresPasswordChange').exists())
+
+            # Test to see appearance of new button action
+            self.assertEqual(len(ButtonAction.objects.all()), 1)
+
+            # Test button action attributes
+            new_button_action = Button.objects.first()
+            self.assertEqual(new_button_action.target_user = new_user)
+            self.assertEqual(new_button_action.name = "Text John Smith")
+            self.assertEqual(new_button_action.type = "message")
+
+            # Test to see appearance of new button
+            self.assertEqual(len(Button.objects.all()), 1)
+
+            # Test new button attributes
+            new_button = Button.objects.first()
+            self.assertEqual(new_button.name, "UNASSIGNED")
+
+            # Test to see if API endpoint response returns 201 CREATED status code
             self.assertEqual(response.status_code, 201)
