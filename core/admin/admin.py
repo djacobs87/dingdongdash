@@ -17,17 +17,6 @@ from ..models import APILog, Button, ButtonAction, Phone
 # Core Admin
 
 def _filter_button_actions(request):
-     if request.user.is_superuser:
-         return ButtonAction.objects.all()
- 
-     organizations = Organization.objects.filter(organization_users__user=request.user)
-     org_users = User.objects.filter(organizations_organization__in=organizations)
-     phones = Phone.objects.filter(user__in=org_users)
-     return ButtonAction.objects.filter(target_user__in=phones)
-
-##
-
-def _filter_button_actions(request):
     if request.user.is_superuser:
         return ButtonAction.objects.all()
 
@@ -35,6 +24,23 @@ def _filter_button_actions(request):
     org_users = User.objects.filter(organizations_organization__in=organizations)
     phones = Phone.objects.filter(user__in=org_users)
     return ButtonAction.objects.filter(target_user__in=phones)
+
+
+def _filter_selectable_phones(request):
+    if request.user.is_superuser:
+        return Phone.objects.all()
+
+    organizations = Organization.objects.filter(organization_users__user=request.user)
+    org_users = User.objects.filter(organizations_organization__in=organizations)
+    return Phone.objects.filter(user__in=org_users)
+
+
+def _filter_selectable_users(request):
+    if request.user.is_superuser:
+        return User.objects.all()
+
+    organizations = Organization.objects.filter(organization_users__user=request.user)
+    return User.objects.filter(organizations_organization__in=organizations)
 
 
 class ButtonAdmin(admin.ModelAdmin):
@@ -61,6 +67,11 @@ admin.site.register(Button, ButtonAdmin)
 
 
 class ButtonActionAdmin(admin.ModelAdmin):
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "target_user":
+            kwargs['queryset'] = _filter_selectable_phones(request)
+        return super(ButtonActionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
     def get_queryset(self, request):
         return _filter_button_actions(request)
 
@@ -69,6 +80,11 @@ admin.site.register(ButtonAction, ButtonActionAdmin)
 
 
 class PhoneAdmin(admin.ModelAdmin):
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            kwargs['queryset'] = _filter_selectable_users(request)
+        return super(PhoneAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
     def get_queryset(self, request):
         if(request.user.is_superuser):
             return Phone.objects.all()
