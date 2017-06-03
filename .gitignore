@@ -4,6 +4,6 @@ venv
 db.sqlite3
 zappa_settings.json
 local_settings.py
-./static/*
+static/*
 *,cover
 dingdongditch/prod_settings.py
