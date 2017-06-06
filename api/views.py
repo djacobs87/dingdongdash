@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 
+import json
+
 from shopify_webhook.decorators import webhook
 from django.contrib.auth.models import User, Group
 
@@ -43,10 +45,14 @@ def generate_action_xml_script(request, action_id):
 
 
 def order_creation(request):
+
+    body = json.loads(request.body)
+    customerEmail = body[u'email']
+    customerPhone = body[u'phone']
     # Create User with default password
         # note for later: user should be forced to change password
-    user = User.objects.create_user(username='john@test.com',
-                                    email='john@test.com',
+    user = User.objects.create_user(username=customerEmail,
+                                    email=customerEmail,
                                     password='password')
     # Add to Group
     group = Group.objects.get(name='RequiresPasswordChange')
@@ -54,7 +60,7 @@ def order_creation(request):
     user.save()
 
     # Create Phone
-    phone = Phone.objects.create(phone_number="+19784718102", user=user)
+    phone = Phone.objects.create(phone_number=[customerPhone], user=user)
 
     # Create Button Action
     action = ButtonAction.objects.create(target_user = phone,
@@ -64,13 +70,9 @@ def order_creation(request):
     # Create New Button
     button = Button.objects.create(name = "UNASSIGNED")
 
-
     # Send Email with Login Info to users
-    email = EmailMessage('Hello, your username is "User" and your password is "password"', to=['user@test.com'])
+    email = EmailMessage('Hello, your username is "User" and your password is "password"', to=[customerEmail])
     email.send()
-
-    print(request.body)
-
 
     return HttpResponse("NOT IMPLEMENTED", status=201)
 

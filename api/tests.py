@@ -147,8 +147,8 @@ class ShopifyWebhookTestCase(TestCase):
 
             # Test new user attributes
             new_user = User.objects.first()
-            self.assertEqual(new_user.username, "john@test.com")
-            self.assertEqual(new_user.email, "john@test.com")
+            self.assertEqual(new_user.username, u'jon@doe.ca')
+            self.assertEqual(new_user.email, u'jon@doe.ca')
 
             # Test new user forced to change pass
             self.assertTrue(new_user.groups.filter(name='RequiresPasswordChange').exists())

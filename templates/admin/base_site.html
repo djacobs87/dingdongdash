@@ -17,6 +17,7 @@
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
     color: black;
+    margin-left: 50px;
     float: left;
 }
 
@@ -64,6 +65,9 @@ h1 {
 	font-weight: 700;
 	margin-bottom: 30px;
 }
+h1.start {
+	margin-top: 45px;
+}
 
 #content-main {
     width: 100%;
@@ -79,6 +83,9 @@ th {
     text-align: left;
 }
 
+.right {
+	margin-top: -50px;
+}
 
 .module h2, .module caption, .inline-group h2 {
     margin-top: 0px;
@@ -120,9 +127,18 @@ a:focus, a:hover {
     color: white;
 }
 
+.selector .selector-available h2 {
+    background: black !important;
+    color: #666;
+}
+
 .selector-chosen h2 {
     background: black !important;
     color: #fff;
+}
+
+.social {
+	float: right;
 }
 
 </style>
@@ -171,7 +187,7 @@ a:focus, a:hover {
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}
                     {% if docsroot %}
-                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> 
                     {% endif %}
                 {% endif %}
                 {% if user.has_usable_password %}
