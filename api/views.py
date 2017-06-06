@@ -57,9 +57,9 @@ def order_creation(request):
     phone = Phone.objects.create(phone_number="+19784718102", user=user)
 
     # Create Button Action
-    # action = ButtonAction.objects.create(target_user = phone,
-    #                                     name = "Text John Smith",
-    #                                     type = "message")
+    action = ButtonAction.objects.create(target_user = phone,
+                                        name = "Text John Smith",
+                                        type = "message")
 
     # Create New Button
     button = Button.objects.create(name = "UNASSIGNED")

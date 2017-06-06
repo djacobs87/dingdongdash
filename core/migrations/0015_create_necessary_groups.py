@@ -4,8 +4,14 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.management import create_permissions
 
-def forwards(apps, schema_editor):
+def forwards(apps, schema_editor, with_create_permissions=True):
+    for app_config in apps.get_app_configs():
+        app_config.models_module = True
+        create_permissions(app_config, verbosity=0)
+        app_config.models_module = None
+
     if not Group.objects.filter(name="CoreUser").exists():
         core_user_group = Group.objects.create(name="CoreUser")
         core_user_group.permissions.add(Permission.objects.get(name="Can add email address"))
@@ -26,18 +32,18 @@ def forwards(apps, schema_editor):
 
     if not Group.objects.filter(name="OrganizationOwner").exists():
         org_owner_group = Group.objects.create(name="OrganizationOwner")
-        #org_owner_group.permissions.add(Permission.objects.get(name="Can add organization"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can change organization"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can add organization owner"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can change organization owner"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization owner"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can add organization user"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can change organization user"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization user"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can add user"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can change user"))
-        # org_owner_group.permissions.add(Permission.objects.get(name="Can delete user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can add organization"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can change organization"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can add organization owner"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can change organization owner"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization owner"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can add organization user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can change organization user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can add user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can change user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can delete user"))
 
     if not Group.objects.filter(name="RequiresPasswordChange").exists():
         Group.objects.create(name="RequiresPasswordChange")

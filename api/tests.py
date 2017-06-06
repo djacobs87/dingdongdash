@@ -154,13 +154,13 @@ class ShopifyWebhookTestCase(TestCase):
             self.assertTrue(new_user.groups.filter(name='RequiresPasswordChange').exists())
 
             # Test to see appearance of new button action
-            # self.assertEqual(len(ButtonAction.objects.all()), 1)
+            self.assertEqual(len(ButtonAction.objects.all()), 1)
 
             # Test button action attributes
-            # new_button_action = Button.objects.first()
-            #self.assertEqual(new_button_action.target_user , new_user)
-            # self.assertEqual(new_button_action.name , "Text John Smith")
-            # self.assertEqual(new_button_action.type , "message")
+            new_button_action = ButtonAction.objects.first()
+            self.assertEqual(new_button_action.target_user, Phone.objects.first())
+            self.assertEqual(new_button_action.name, "Text John Smith")
+            self.assertEqual(new_button_action.type, "message")
 
             # Test to see appearance of new button
             self.assertEqual(len(Button.objects.all()), 1)
