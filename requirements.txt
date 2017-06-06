@@ -30,13 +30,11 @@ django-organizations==0.9.1
 django-picklefield==0.3.2
 django-scheduler==0.8.3
 django-settings-export==1.2.1
-django-shopify-webhook==0.3.1
 django-storages==1.5.2
 docutils==0.13.1
 durationpy==0.4
 enum34==1.1.6
 flake8==3.3.0
-funcsigs==1.0.2
 future==0.16.0
 futures==3.1.1
 hjson==2.0.2
@@ -51,11 +49,9 @@ lambda-packages==0.15.0
 logilab-astng==0.24.3
 logilab-common==1.4.0
 mccabe==0.6.1
-mock==2.0.0
 ndg-httpsclient==0.4.2
 oauthlib==2.0.2
 packaging==16.8
-pbr==3.0.1
 placebo==0.8.1
 psycopg2==2.7.1
 pyasn1==0.2.3
