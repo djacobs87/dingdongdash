@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'shopify_webhook',
     'compat',
     'allauth',
     'allauth.account',
@@ -80,6 +81,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'dingdongditch.wsgi.application'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'me@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
 
 
 # Password validation

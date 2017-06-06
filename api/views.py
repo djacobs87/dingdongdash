@@ -1,8 +1,13 @@
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+
+from shopify_webhook.decorators import webhook
+from django.contrib.auth.models import User, Group
+
 
 import core.functions as ddd
-from core.models import APILog, ButtonAction
+from core.models import APILog, ButtonAction, Button, Phone
 
 
 def process_button(request):
@@ -35,3 +40,41 @@ def generate_action_xml_script(request, action_id):
         return HttpResponse(xml, content_type='text/xml')
     except Exception as result:
         return HttpResponse(result, status=400)
+
+
+def order_creation(request):
+    # Create User with default password
+        # note for later: user should be forced to change password
+    user = User.objects.create_user(username='john@test.com',
+                                    email='john@test.com',
+                                    password='password')
+    # Add to Group
+    group = Group.objects.get(name='RequiresPasswordChange')
+    user.groups.add(group)
+    user.save()
+
+    # Create Phone
+    phone = Phone.objects.create(phone_number="+19784718102", user=user)
+
+    # Create Button Action
+    action = ButtonAction.objects.create(target_user = phone,
+                                        name = "Text John Smith",
+                                        type = "message")
+
+    # Create New Button
+    button = Button.objects.create(name = "UNASSIGNED")
+
+
+    # Send Email with Login Info to users
+    email = EmailMessage('Hello, your username is "User" and your password is "password"', to=['user@test.com'])
+    email.send()
+
+    print(request.body)
+
+
+    return HttpResponse("NOT IMPLEMENTED", status=201)
+
+
+@webhook
+def order_creation_webhook(request):
+    return order_creation(request)

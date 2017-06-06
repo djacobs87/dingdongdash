@@ -48,8 +48,10 @@ class AdminTestCase(TestCase):
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
         self.button1 = Button.objects.create(serial_number="1111222233334444",
                                              organization=self.organization)
-        self.button1.single_press_actions.add(
-            ButtonAction.objects.create(name="Call User1", target_user=self.phone))
+
+        self.button_action1 = ButtonAction.objects.create(name="Call User1",
+                                                          target_user=self.phone)
+        self.button1.single_press_actions.add(self.button_action1)
         self.button1.double_press_actions.add(
             ButtonAction.objects.create(name="Text User1", target_user=self.phone))
 
@@ -174,3 +176,55 @@ class AdminTestCase(TestCase):
                          list(ButtonAction.objects.all()))
         self.assertEqual(list(baa.get_queryset(non_superuser_request)).sort(),
                          list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+
+    def test_button_action_formfield_for_foreignkey(self):
+        non_superuser_request = MockRequest()
+        non_superuser_request.user = self.user1
+
+        baa = ButtonActionAdmin(ButtonAction, self.site)
+
+        kwargs = {}
+        target_user_dbfield = \
+            self.button_action1._meta.get_field("target_user")
+        target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
+                            non_superuser_request,
+                            **kwargs))
+
+        superuser_target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
+                                        self.superuser_request,
+                                        **kwargs))
+
+        self.assertEqual(list(superuser_target_user_field.queryset),
+                         list(Phone.objects.all()))
+
+        queryset_list = list(target_user_field.queryset)
+        queryset_list.sort()
+        target_list = list(Phone.objects.filter(user=self.user1))
+        target_list.sort()
+        self.assertEqual(queryset_list, target_list)
+
+
+    def test_phone_formfield_for_foreignkey(self):
+        non_superuser_request = MockRequest()
+        non_superuser_request.user = self.user1
+
+        pa = PhoneAdmin(Phone, self.site)
+
+        kwargs = {}
+        user_dbfield = self.phone._meta.get_field("user")
+        user_field = (pa.formfield_for_foreignkey(user_dbfield,
+                      non_superuser_request,
+                      **kwargs))
+
+        superuser_user_field = (pa.formfield_for_foreignkey(user_dbfield,
+                                self.superuser_request,
+                                **kwargs))
+
+        self.assertEqual(list(superuser_user_field.queryset),
+                         list(User.objects.all()))
+
+        queryset_list = list(user_field.queryset)
+        queryset_list.sort()
+        target_list = list(User.objects.filter(username="user1"))
+        target_list.sort()
+        self.assertEqual(queryset_list, target_list)

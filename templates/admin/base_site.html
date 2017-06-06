@@ -17,7 +17,6 @@
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
     color: black;
-    margin-left: 50px;
     float: left;
 }
 
@@ -172,7 +171,7 @@ a:focus, a:hover {
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}
                     {% if docsroot %}
-                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> 
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
                     {% endif %}
                 {% endif %}
                 {% if user.has_usable_password %}
