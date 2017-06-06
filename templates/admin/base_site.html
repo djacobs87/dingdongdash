@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% load hijack_tags %}
+{% load hijack_tags i18n %}
 
 {% block title %}{{ title }} | ⠙⠙⠙ Admin{% endblock %}
 
@@ -144,6 +144,8 @@ a:focus, a:hover {
 
 
 {% endblock %}
+
+{% block content_title %}&nbsp;{% endblock %}
 
 {% block branding %}
 <h1 id="site-name">

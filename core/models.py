@@ -30,8 +30,8 @@ class ButtonAction(models.Model):
     message = models.TextField()
 
     class Meta:
-        verbose_name = 'Action'
-        verbose_name_plural = 'Actions'
+        verbose_name = 'Buttion Action'
+        verbose_name_plural = 'Button Action Editor (Email, SMS, Call)'
 
     def __unicode__(self):
         if self.name:
@@ -59,6 +59,10 @@ class Button(models.Model):
                                      blank=True,
                                      null=True,
                                      related_name="organization")
+
+    class Meta:
+        verbose_name = 'Button'
+        verbose_name_plural = 'My Buttons'
 
     def __unicode__(self):
         if self.name:

@@ -5,7 +5,7 @@ from django.apps import AppConfig
 
 class CoreConfig(AppConfig):
     name = 'core'
-    verbose_name = 'Core'
+    verbose_name = 'Managing Buttons and Actions'
 
     def ready(self):
         from .signals import user_creation

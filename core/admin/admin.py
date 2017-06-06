@@ -7,8 +7,6 @@ from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from organizations.admin import OrganizationUserAdmin, OrganizationOwnerAdmin
 from organizations.models import Organization, OrganizationUser, OrganizationOwner
-from schedule.models import CalendarRelation, Rule, Occurrence, Event
-from schedule.admin import CalendarAdminOptions
 from import_export.admin import ImportExportModelAdmin
 from ..models import APILog, Button, ButtonAction, Phone
 
@@ -143,7 +141,6 @@ class DDDModelAdmin(admin.ModelAdmin):
 
 DDDModelAdmin.get_model_perms = get_model_perms_superuser
 
-CalendarAdminOptions.get_model_perms = get_model_perms_superuser
 GroupAdmin.get_model_perms = get_model_perms_superuser
 SiteAdmin.get_model_perms = get_model_perms_superuser
 
@@ -154,18 +151,6 @@ class EmailAddressInlineAdmin(admin.TabularInline):
 
 UserAdmin.get_model_perms = get_model_perms_superuser
 UserAdmin.inlines = [EmailAddressInlineAdmin]
-
-admin.site.unregister(CalendarRelation)
-admin.site.register(CalendarRelation, DDDModelAdmin)
-
-admin.site.unregister(Event)
-admin.site.register(Event, DDDModelAdmin)
-
-admin.site.unregister(Rule)
-admin.site.register(Rule, DDDModelAdmin)
-
-admin.site.unregister(Occurrence)
-admin.site.register(Occurrence, DDDModelAdmin)
 
 admin.site.unregister(Organization)
 
