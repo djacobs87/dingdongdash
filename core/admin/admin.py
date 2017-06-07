@@ -69,7 +69,7 @@ admin.site.register(Button, ButtonAdmin)
 class ButtonActionAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "target_user":
-            kwargs['queryset'] = _filter_selectable_phones(request)
+            kwargs['queryset'] = _filter_selectable_users(request)
         return super(ButtonActionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_queryset(self, request):
@@ -79,22 +79,22 @@ class ButtonActionAdmin(admin.ModelAdmin):
 admin.site.register(ButtonAction, ButtonActionAdmin)
 
 
-class PhoneAdmin(admin.ModelAdmin):
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "user":
-            kwargs['queryset'] = _filter_selectable_users(request)
-        return super(PhoneAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+# class PhoneAdmin(admin.ModelAdmin):
+#     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+#         if db_field.name == "user":
+#             kwargs['queryset'] = _filter_selectable_users(request)
+#         return super(PhoneAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
-    def get_queryset(self, request):
-        if(request.user.is_superuser):
-            return Phone.objects.all()
+#     def get_queryset(self, request):
+#         if(request.user.is_superuser):
+#             return Phone.objects.all()
 
-        organizations = Organization.objects.filter(organization_users__user=request.user)
-        org_users = User.objects.filter(organizations_organization__in=organizations)
-        return Phone.objects.filter(user__in=org_users)
+#         organizations = Organization.objects.filter(organization_users__user=request.user)
+#         org_users = User.objects.filter(organizations_organization__in=organizations)
+#         return Phone.objects.filter(user__in=org_users)
 
 
-admin.site.register(Phone, PhoneAdmin)
+# admin.site.register(Phone, PhoneAdmin)
 
 
 class APILogAdmin(ImportExportModelAdmin):
@@ -151,9 +151,11 @@ SiteAdmin.get_model_perms = get_model_perms_superuser
 class EmailAddressInlineAdmin(admin.TabularInline):
     model = EmailAddress
 
+class PhoneInlineAdmin(admin.TabularInline):
+    model = Phone
 
 UserAdmin.get_model_perms = get_model_perms_superuser
-UserAdmin.inlines = [EmailAddressInlineAdmin]
+UserAdmin.inlines = [EmailAddressInlineAdmin, PhoneInlineAdmin]
 
 admin.site.unregister(CalendarRelation)
 admin.site.register(CalendarRelation, DDDModelAdmin)
