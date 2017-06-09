@@ -58,7 +58,8 @@ class ButtonAdmin(admin.ModelAdmin):
         if not request.user.is_superuser:
             organization_user = OrganizationUser.objects.filter(user=request.user)
             organizations = Organization.objects.filter(organization_users=organization_user)
-            return Button.objects.filter(organization__in=organizations)
+            users = User.objects.filter(organizations_organization__in=organizations)
+            return Button.objects.filter(user__in=users)
 
         return Button.objects.all()
 

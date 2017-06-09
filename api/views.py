@@ -50,17 +50,22 @@ def order_creation(request):
     body = json.loads(request.body)
     customer_email = body[u'email']
     customer_phone = body['billing_address'][u'phone']
-    # Create User with default password
-        # note for later: user should be forced to change password
-    
     password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-    user = User.objects.create_user(username=customer_email,
-                                    email=customer_email,
-                                    password=password)
-    # Add to Group
-    group = Group.objects.get(name='RequiresPasswordChange')
-    user.groups.add(group)
-    user.save()
+
+    try:
+        user = User.objects.get(email=customer_email)
+    except Exception as e:
+        user = User.objects.create_user(username=customer_email,
+                                        email=customer_email,
+                                        password=password)
+        group = Group.objects.get(name='RequiresPasswordChange')
+        user.groups.add(group)
+        user.save()
+        # Send Email with Login Info to users
+        message = 'Hello, your username is '+customer_email+' and your temporary password is "'+password+'". The phone number that you have registered is '+customer_phone
+        print(message)
+        # email = EmailMessage(message, to=[customer_email])
+        # email.send()
 
     # Create Phone
     phone = Phone.objects.create(phone_number=customer_phone, user=user)
@@ -69,15 +74,13 @@ def order_creation(request):
     action = ButtonAction.objects.create(target_user = phone,
                                         name = "Text John Smith",
                                         type = "message")
+
     # Create New Button
-    button = Button.objects.create(name = "UNASSIGNED")
+    serial_number = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+    button = Button.objects.create(name="UNASSIGNED",
+                                   user=user,
+                                   serial_number="UNASSIGNED-"+serial_number)
 
-    # Send Email with Login Info to users
-    message = 'Hello, your username is '+customer_email+' and your temporary password is "'+password+'". The phone number that you have registered is '+customer_phone
-    email = EmailMessage(message, to=[customer_email])
-    email.send()
-
-    print(message)
     return HttpResponse("CREATED", status=201)
 
 

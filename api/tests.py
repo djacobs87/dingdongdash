@@ -20,7 +20,7 @@ class ProcessButtonTestCase(TestCase):
                                               email='user1@test.com',
                                               password='abc123!@#')
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
-        self.button = Button.objects.create(serial_number="fooofooodoggdogg")
+        self.button = Button.objects.create(serial_number="fooofooodoggdogg", user=self.user1)
         self.button.single_press_actions.add(
             ButtonAction.objects.create(type="call",
                                         name="Call User1",
