@@ -15,6 +15,14 @@
     overflow: visible;
 }
 
+.setup {
+    padding: 12px;
+}
+       
+.home {
+    padding: 12px; 
+}
+
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
     color: black;
     margin-left: 50px;
@@ -137,9 +145,16 @@ a:focus, a:hover {
     color: #fff;
 }
 
-.social {
-	float: right;
+.footer {
+    position: relative;
+    text-align: center;
 }
+/*.social {
+	text-align: right;
+}
+.version {
+    text-align: right;
+    }*/
 
 </style>
 {% endblock %}
@@ -187,15 +202,25 @@ a:focus, a:hover {
                 {% if user.is_active and user.is_staff %}
                     {% url 'django-admindocs-docroot' as docsroot %}
                     {% if docsroot %}
-                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> 
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
                     {% endif %}
                 {% endif %}
                 {% if user.has_usable_password %}
                 	<div id = "password">
-                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> </div>
+                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+                    </div>
                 {% endif %}
-                	<div id = "log-out">
-                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></div>
+                    <div class = "setup">
+                    <a href="https://dingdongdash.net/pages/ding-dong-ditch-button-setup">{% trans 'Set Up Instructions' %}</a>
+                    </div>
+
+                    <div class = "home">
+                    <a href = "https://dingdongdash.net/">{% trans 'Store Home' %}</a>
+                    </div>
+                	
+                    <div id = "log-out">
+                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                    </div>
             {% endblock %}
         </div>
     {% endif %}

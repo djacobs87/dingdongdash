@@ -12,6 +12,7 @@ def forwards(apps, schema_editor, with_create_permissions=True):
         create_permissions(app_config, verbosity=0)
         app_config.models_module = None
 
+    # import pdb; pdb.set_trace()
     if not Group.objects.filter(name="CoreUser").exists():
         core_user_group = Group.objects.create(name="CoreUser")
         core_user_group.permissions.add(Permission.objects.get(name="Can add email address"))

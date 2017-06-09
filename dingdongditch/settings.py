@@ -153,6 +153,7 @@ LOGIN_REDIRECT_URL = "/dashboard"
 SETTINGS_EXPORT = [
     'DEBUG',
     'GA_ID',
+    'VERSION'
 ]
 
 # Where admins are redirected to after hijacking a user

@@ -13,44 +13,27 @@
     background: transparent;
     }   
 
-    a.setup {
-        padding: 10px;
-        margin-left: 0px;
-        font-size: 20px;
-        border: solid;
-        background-color: white;
-    }
-    a.store {
-        padding: 20px;
-        margin-left: 0px;
-        font-size: 30px;
-        border: solid;
-        background-color: white;
-    }
-    .setup a:hover, .setup a:focus{
-        background-color: black;
-    }
 
-    .version {
-        align: center;
-    }
+    
 
 </style>
 {% endblock %}
 
 {% block sidebar %}
 <div id="content-related">
-    <div class="right">
+    <!-- <div class="right">
         <a href = "https://dingdongdash.net/" class = "store">Store Home</a>
         <h1 class = "start">Get Started</h1>
         <a href="https://dingdongdash.net/pages/ding-dong-ditch-button-setup" class="setup">Button Setup Instructions</a>
-    </div>
+    </div> -->
 </div>
-
+<div class = "footer">
 <footer class = "social">
-    <a href="https://www.facebook.com/dingdongdash/"><img src="http://robsageauctions.com/wp/wp-content/uploads/2016/04/1459920385_facebook_circle_color.png" itemprop="facebook"></a>
-    <a href="https://twitter.com/dingd0ngdash"><img src="https://developers.google.com/site-assets/logo-twitter.svg" itemprop="twitter"></a>
-    <a href="https://www.linkedin.com/company/dingdongdash"><img src="https://static.licdn.com/scds/common/u/images/logos/favicons/v1/favicon.ico" itemprop="linkedin"></a>
+    <a href="https://www.facebook.com/dingdongdash/"><img src="http://asbsd.org/wp-content/themes/progreen/img/facebook.png" itemprop="facebook"></a>
+    <a href="https://twitter.com/dingd0ngdash"><img src="http://jqi.umd.edu/sites/all/modules/socialmedia/icons/icondock/Vector%20Social%20Media%20Icons/png/32px/twitter.png" itemprop="twitter"></a>
+    <a href="https://www.linkedin.com/company/dingdongdash"><img src="https://static.licdn.com/sc/h/9wcfzhuisnwhyauwp7t9xixy7" itemprop="linkedin"></a>
 </footer>
-<footer class = "version">DingDongDash Version 1.0.0</footer>
+
+<footer class = "version">DingDongDash {{ settings.VERSION }}</footer>
+</div>
 {% endblock %}
