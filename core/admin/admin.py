@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import User
@@ -59,7 +61,7 @@ class ButtonAdmin(admin.ModelAdmin):
             organization_user = OrganizationUser.objects.filter(user=request.user)
             organizations = Organization.objects.filter(organization_users=organization_user)
             users = User.objects.filter(organizations_organization__in=organizations)
-            return Button.objects.filter(user__in=users)
+            return Button.objects.filter(user__in=chain(users,[request.user]))
 
         return Button.objects.all()
 
