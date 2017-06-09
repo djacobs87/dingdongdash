@@ -142,6 +142,11 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+VERSION = '1.0.0'
+FACEBOOK_URL = 'https://www.facebook.com/dingdongdash/'
+TWITTER_URL = 'https://twitter.com/dingd0ngdash'
+LINKEDIN_URL = 'https://www.linkedin.com/company/dingdongdash'
+
 ORGS_SLUGFIELD = 'django_extensions.db.fields.AutoSlugField'
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -153,7 +158,10 @@ LOGIN_REDIRECT_URL = "/dashboard"
 SETTINGS_EXPORT = [
     'DEBUG',
     'GA_ID',
-    'VERSION'
+    'VERSION',
+    'FACEBOOK_URL',
+    'TWITTER_URL',
+    'LINKEDIN_URL'
 ]
 
 # Where admins are redirected to after hijacking a user
