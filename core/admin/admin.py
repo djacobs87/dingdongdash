@@ -24,7 +24,7 @@ def _filter_button_actions(request):
 
     organizations = Organization.objects.filter(organization_users__user=request.user)
     org_users = User.objects.filter(organizations_organization__in=organizations)
-    phones = Phone.objects.filter(user__in=org_users)
+    phones = Phone.objects.filter(user__in=chain(org_users, [request.user]))
     return ButtonAction.objects.filter(target_user__in=phones)
 
 
@@ -34,7 +34,7 @@ def _filter_selectable_phones(request):
 
     organizations = Organization.objects.filter(organization_users__user=request.user)
     org_users = User.objects.filter(organizations_organization__in=organizations)
-    return Phone.objects.filter(user__in=org_users)
+    return Phone.objects.filter(user__in=chain(org_users, [request.user]))
 
 
 def _filter_selectable_users(request):
@@ -48,7 +48,7 @@ def _filter_selectable_users(request):
 class ButtonAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
-            return ('serial_number', 'organization',)
+            return ('serial_number', 'user',)
 
         return super(ButtonAdmin, self).get_readonly_fields(request, obj)
 
@@ -94,7 +94,7 @@ class PhoneAdmin(admin.ModelAdmin):
 
         organizations = Organization.objects.filter(organization_users__user=request.user)
         org_users = User.objects.filter(organizations_organization__in=organizations)
-        return Phone.objects.filter(user__in=org_users)
+        return Phone.objects.filter(user__in=chain(org_users, [request.user]))
 
 
 admin.site.register(Phone, PhoneAdmin)

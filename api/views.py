@@ -71,12 +71,20 @@ def order_creation(request):
         # email.send()
 
     # Create Phone
-    phone = Phone.objects.create(phone_number=customer_phone, user=user)
+    try:
+        phone = Phone.objects.get(phone_number=customer_phone, user=user)
+    except Exception as e:
+        phone = Phone.objects.create(phone_number=customer_phone, user=user)
 
     # Create Button Action
-    action = ButtonAction.objects.create(target_user = phone,
-                                        name = "Text John Smith",
-                                        type = "message")
+    try:
+        action = ButtonAction.objects.create(target_user = phone,
+                                             name = "Text John Smith",
+                                             type = "message")
+    except Exception as e:
+        action = ButtonAction.objects.create(target_user = phone,
+                                             name = "Text John Smith",
+                                             type = "message")
 
     # Create New Buttons
     for i in range(quantity):

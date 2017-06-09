@@ -80,7 +80,7 @@ class AdminTestCase(TestCase):
         ba = ButtonAdmin(Button, self.site)
         self.assertEqual(ba.get_readonly_fields(self.superuser_request), ())
         self.assertEqual(ba.get_readonly_fields(non_superuser_request),
-                         ('serial_number', 'organization'))
+                         ('serial_number', 'user'))
 
     def test_button_queryset(self):
         non_superuser_request = MockRequest()
