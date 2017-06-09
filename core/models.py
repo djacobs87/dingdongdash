@@ -26,7 +26,7 @@ BUTTON_ACTION_CHOICES = [
 class ButtonAction(models.Model):
     name = models.CharField(max_length=128)
     type = models.CharField(max_length=8, choices=BUTTON_ACTION_CHOICES, default='call')
-    target_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="target_user")
+    recipient = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="recipient")
     message = models.TextField()
 
     class Meta:
