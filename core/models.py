@@ -48,17 +48,13 @@ class Button(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
     serial_number = models.CharField(max_length=16, unique=True)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING, related_name="button_user")
     single_press_actions = models.ManyToManyField(ButtonAction,
                                                   related_name="single_press_actions")
     double_press_actions = models.ManyToManyField(ButtonAction,
                                                   related_name="double_press_actions")
     long_press_actions = models.ManyToManyField(ButtonAction,
                                                 related_name="long_press_actions")
-    organization = models.ForeignKey(Organization,
-                                     on_delete=models.CASCADE,
-                                     blank=True,
-                                     null=True,
-                                     related_name="organization")
 
     class Meta:
         verbose_name = 'Button'

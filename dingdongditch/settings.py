@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'shopify_webhook',
     'compat',
     'allauth',
     'allauth.account',
@@ -79,6 +80,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'dingdongditch.wsgi.application'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'me@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
 
 
 # Password validation
@@ -134,6 +141,11 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
+VERSION = '1.0.0'
+FACEBOOK_URL = 'https://www.facebook.com/dingdongdash/'
+TWITTER_URL = 'https://twitter.com/dingd0ngdash'
+LINKEDIN_URL = 'https://www.linkedin.com/company/dingdongdash'
+
 ORGS_SLUGFIELD = 'django_extensions.db.fields.AutoSlugField'
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
@@ -145,6 +157,10 @@ LOGIN_REDIRECT_URL = "/dashboard"
 SETTINGS_EXPORT = [
     'DEBUG',
     'GA_ID',
+    'VERSION',
+    'FACEBOOK_URL',
+    'TWITTER_URL',
+    'LINKEDIN_URL'
 ]
 
 # Where admins are redirected to after hijacking a user

@@ -2,27 +2,26 @@
 
 {% block extrastyle %}{{ block.super }}
 <style>
-
-    #content-related {
+  #content-related {
     float: right;
     text-align: center;
     width: 300px;
     position: relative;
     margin-right: -400px;
     background: transparent;
-    }
+  }
 
-    a.setup {
-        padding: 10px;
-        margin-left: 0px;
-        font-size: 16px;
-        border: solid;
-        background-color: white;
-    }
-    .setup a:hover, .setup a:focus{
-        background-color: black;
-    }
-
+  a.setup {
+    padding: 10px;
+    margin-left: 0px;
+    font-size: 16px;
+    border: solid;
+    background-color: white;
+  }
+  
+  .setup a:hover, .setup a:focus{
+    background-color: black;
+  }
 </style>
 {% endblock %}
 
@@ -33,4 +32,12 @@
         <a href="https://dingdongdash.net/pages/ding-dong-ditch-button-setup" class="setup">New Button Setup Instructions</a>
     </div>
 </div>
+<footer>
+    <div class="social">
+        <a href="{{ settings.FACEBOOK_URL }}"><img src="http://asbsd.org/wp-content/themes/progreen/img/facebook.png" itemprop="facebook"></a>
+        <a href="{{ settings.TWITTER_URL }}"><img src="http://jqi.umd.edu/sites/all/modules/socialmedia/icons/icondock/Vector%20Social%20Media%20Icons/png/32px/twitter.png" itemprop="twitter"></a>
+        <a href="{{ settings.LINKEDIN_URL }}"><img src="https://static.licdn.com/sc/h/9wcfzhuisnwhyauwp7t9xixy7" itemprop="linkedin"></a>
+    </div>
+    <div class = "version">DingDongDash {{ settings.VERSION }}</div>
+</footer>
 {% endblock %}

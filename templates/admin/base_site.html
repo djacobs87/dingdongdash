@@ -15,8 +15,17 @@
     overflow: visible;
 }
 
+.setup {
+    padding: 12px;
+}
+       
+.home {
+    padding: 12px; 
+}
+
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
     color: black;
+    margin-left: 50px;
     float: left;
 }
 
@@ -64,6 +73,9 @@ h1 {
 	font-weight: 700;
 	margin-bottom: 30px;
 }
+h1.start {
+	margin-top: 45px;
+}
 
 #content-main {
     width: 100%;
@@ -79,6 +91,9 @@ th {
     text-align: left;
 }
 
+.right {
+	margin-top: -50px;
+}
 
 .module h2, .module caption, .inline-group h2 {
     margin-top: 0px;
@@ -120,10 +135,26 @@ a:focus, a:hover {
     color: white;
 }
 
+.selector .selector-available h2 {
+    background: black !important;
+    color: #666;
+}
+
 .selector-chosen h2 {
     background: black !important;
     color: #fff;
 }
+
+.footer {
+    position: relative;
+    text-align: center;
+}
+/*.social {
+	text-align: right;
+}
+.version {
+    text-align: right;
+    }*/
 
 </style>
 {% endblock %}
@@ -178,10 +209,20 @@ a:focus, a:hover {
                 {% endif %}
                 {% if user.has_usable_password %}
                 	<div id = "password">
-                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> </div>
+                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+                    </div>
                 {% endif %}
-                	<div id = "log-out">
-                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a></div>
+                    <div class = "setup">
+                    <a href="https://dingdongdash.net/pages/ding-dong-ditch-button-setup">{% trans 'Set Up Instructions' %}</a>
+                    </div>
+
+                    <div class = "home">
+                    <a href = "https://dingdongdash.net/">{% trans 'Store Home' %}</a>
+                    </div>
+                	
+                    <div id = "log-out">
+                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                    </div>
             {% endblock %}
         </div>
     {% endif %}

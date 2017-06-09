@@ -7,3 +7,4 @@ local_settings.py
 static/*
 *,cover
 dingdongditch/prod_settings.py
+.github_token

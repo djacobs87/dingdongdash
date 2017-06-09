@@ -47,7 +47,7 @@ class AdminTestCase(TestCase):
                                                           organization_user=self.org_user)
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
         self.button1 = Button.objects.create(serial_number="1111222233334444",
-                                             organization=self.organization)
+                                             user=self.user1)
 
         self.button_action1 = ButtonAction.objects.create(name="Call User1",
                                                           target_user=self.phone)
@@ -62,7 +62,7 @@ class AdminTestCase(TestCase):
         self.not_my_phone = Phone.objects.create(phone_number="+12223334444", user=self.user2)
         self.not_my_organization = Organization.objects.create(name='Not My Org')
         self.someone_elses_button = Button.objects.create(serial_number="5555666677778888",
-                                                          organization=self.not_my_organization)
+                                                          user=self.user2)
         self.someone_elses_action = ButtonAction.objects.create(name="Not Mine",
                                                                 type="call",
                                                                 message="hi",
@@ -88,8 +88,10 @@ class AdminTestCase(TestCase):
 
         ba = ButtonAdmin(Button, self.site)
         self.assertEqual(list(ba.get_queryset(self.superuser_request)), list(Button.objects.all()))
+
+        users = User.objects.filter(organizations_organization__in=[self.organization])
         self.assertEqual(list(ba.get_queryset(non_superuser_request)),
-                         list(Button.objects.filter(organization=self.organization)))
+                         list(Button.objects.filter(user__in=users)))
 
     def test_button_formfield_for_manytomany(self):
         non_superuser_request = MockRequest()

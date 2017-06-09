@@ -14,7 +14,7 @@ class FunctionalTestCase(TestCase):
         self.button_action1 = ButtonAction.objects.create(name="Call User1",
                                                           target_user=self.phone)
 
-        self.button1 = Button.objects.create(serial_number="1111222233334444")
+        self.button1 = Button.objects.create(serial_number="1111222233334444", user=self.user1)
         self.button1.single_press_actions.add(
             ButtonAction.objects.create(name="Call User1", target_user=self.phone))
         self.button1.double_press_actions.add(
@@ -86,7 +86,10 @@ class UserCreationTestCase(TestCase):
 
 class ModelRepresentationTestCase(TestCase):
     def test_button_unicode(self):
-        button = Button.objects.create(serial_number="1111222233334444")
+        new_user = User.objects.create_user(email="test@test.com",
+                                            username="test_user",
+                                            password="xxxyyy123")
+        button = Button.objects.create(serial_number="1111222233334444", user=new_user)
         self.assertEqual(unicode(button), "1111222233334444")
         button.name = "Test Name"
         self.assertEqual(unicode(button), "Test Name")
