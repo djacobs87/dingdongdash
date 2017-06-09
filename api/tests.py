@@ -163,7 +163,7 @@ class ShopifyWebhookTestCase(TestCase):
             self.assertEqual(new_button_action.type, "message")
 
             # Test to see appearance of new button
-            self.assertEqual(len(Button.objects.all()), 1)
+            self.assertEqual(len(Button.objects.all()), 2)
 
             # Test new button attributes
             new_button = Button.objects.first()

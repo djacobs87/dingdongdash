@@ -46,11 +46,14 @@ def generate_action_xml_script(request, action_id):
 
 
 def order_creation(request):
-
     body = json.loads(request.body)
     customer_email = body[u'email']
     customer_phone = body['billing_address'][u'phone']
     password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+
+    quantity = 0
+    for item in body['line_items']:
+        quantity += item['quantity']
 
     try:
         user = User.objects.get(email=customer_email)
@@ -75,11 +78,12 @@ def order_creation(request):
                                         name = "Text John Smith",
                                         type = "message")
 
-    # Create New Button
-    serial_number = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
-    button = Button.objects.create(name="UNASSIGNED",
-                                   user=user,
-                                   serial_number="UNASSIGNED-"+serial_number)
+    # Create New Buttons
+    for i in range(quantity):
+        serial_number = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+        button = Button.objects.create(name="UNASSIGNED",
+                                       user=user,
+                                       serial_number="UNASSIGNED-"+serial_number)
 
     return HttpResponse("CREATED", status=201)
 
