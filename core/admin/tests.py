@@ -47,7 +47,7 @@ class AdminTestCase(TestCase):
                                                           organization_user=self.org_user)
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
         self.button1 = Button.objects.create(serial_number="1111222233334444",
-                                             organization=self.organization)
+                                             user=self.user1)
 
         self.button_action1 = ButtonAction.objects.create(name="Call User1",
                                                           target_user=self.phone)
@@ -62,7 +62,7 @@ class AdminTestCase(TestCase):
         self.not_my_phone = Phone.objects.create(phone_number="+12223334444", user=self.user2)
         self.not_my_organization = Organization.objects.create(name='Not My Org')
         self.someone_elses_button = Button.objects.create(serial_number="5555666677778888",
-                                                          organization=self.not_my_organization)
+                                                          user=self.user2)
         self.someone_elses_action = ButtonAction.objects.create(name="Not Mine",
                                                                 type="call",
                                                                 message="hi",
@@ -80,7 +80,7 @@ class AdminTestCase(TestCase):
         ba = ButtonAdmin(Button, self.site)
         self.assertEqual(ba.get_readonly_fields(self.superuser_request), ())
         self.assertEqual(ba.get_readonly_fields(non_superuser_request),
-                         ('serial_number', 'organization'))
+                         ('serial_number', 'user'))
 
     def test_button_queryset(self):
         non_superuser_request = MockRequest()
@@ -88,8 +88,10 @@ class AdminTestCase(TestCase):
 
         ba = ButtonAdmin(Button, self.site)
         self.assertEqual(list(ba.get_queryset(self.superuser_request)), list(Button.objects.all()))
+
+        users = User.objects.filter(organizations_organization__in=[self.organization])
         self.assertEqual(list(ba.get_queryset(non_superuser_request)),
-                         list(Button.objects.filter(organization=self.organization)))
+                         list(Button.objects.filter(user__in=users)))
 
     def test_button_formfield_for_manytomany(self):
         non_superuser_request = MockRequest()
@@ -187,12 +189,12 @@ class AdminTestCase(TestCase):
         target_user_dbfield = \
             self.button_action1._meta.get_field("target_user")
         target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                            non_superuser_request,
-                            **kwargs))
+                             non_superuser_request,
+                             **kwargs))
 
         superuser_target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                                        self.superuser_request,
-                                        **kwargs))
+                                       self.superuser_request,
+                                       **kwargs))
 
         self.assertEqual(list(superuser_target_user_field.queryset),
                          list(Phone.objects.all()))
@@ -202,7 +204,6 @@ class AdminTestCase(TestCase):
         target_list = list(Phone.objects.filter(user=self.user1))
         target_list.sort()
         self.assertEqual(queryset_list, target_list)
-
 
     def test_phone_formfield_for_foreignkey(self):
         non_superuser_request = MockRequest()
