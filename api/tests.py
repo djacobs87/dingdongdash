@@ -120,16 +120,17 @@ class ShopifyWebhookTestCase(TestCase):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         mock_request = mock.Mock()
 
+        mock_request.method = "POST"
         mock_request.META = {
             'X_SHOPIFY_TEST': 'true',
-            'X_SHOPIFY_TOPIC': 'orders/paid',
+            'HTTP_X_SHOPIFY_TOPIC': 'orders/paid',
             'X_NEWRELIC_ID': 'VQQUUFNS',
             'X_FORWARDED_PROTO': 'https',
             'X_SHOPIFY_HMAC_SHA256': '/A4sSNHE4Mbh7liKS5mEr7tFfVsawfHVO9sGCXh7MYQ=',
             'X_SHOPIFY_ORDER_ID': '820982911946154508',
             'HOST': 'ding-dong-ditch-aphelionz.c9users.io',
             'ACCEPT': '*/*',
-            'X_SHOPIFY_SHOP_DOMAIN': 'mrh-io.myshopify.com',
+            'HTTP_X_SHOPIFY_SHOP_DOMAIN': 'mrh-io.myshopify.com',
             'CONNECTION': 'keep-alive',
             'USER_AGENT': 'Ruby',
             'X_REGION': 'usw',

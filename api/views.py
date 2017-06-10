@@ -85,9 +85,9 @@ Welcome to Ding Dong Dash.
 
     # Create Button Action
     try:
-        action = ButtonAction.objects.create(target_user=phone,
-                                             name="Text Myself",
-                                             type="message")
+        action = ButtonAction.objects.get(target_user=phone,
+                                          name="Text Myself",
+                                          type="message")
     except Exception:
         action = ButtonAction.objects.create(target_user=phone,
                                              name="Text Myself",
@@ -97,13 +97,12 @@ Welcome to Ding Dong Dash.
     for i in range(quantity):
         sn = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
         button = Button.objects.create(name="UNASSIGNED",
-                              user=user,
-                              serial_number="UNASSIGNED-"+sn)
+                                       user=user,
+                                       serial_number="UNASSIGNED-"+sn)
 
         button.single_press_actions.add(action)
         button.double_press_actions.add(action)
         button.long_press_actions.add(action)
-
 
     return HttpResponse("CREATED", status=201)
 
