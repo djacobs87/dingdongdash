@@ -105,7 +105,7 @@ class GenerateXMLScriptTestCase(TestCase):
         user1 = User.objects.create_user(username='User1',
                                          email='user1@test.com',
                                          password='abc123!@#')
-        phone = Phone.objects.create(phone_number="+19783284466", user=user1)
+        Phone.objects.create(phone_number="+19783284466", user=user1)
         button_action = ButtonAction.objects.create(message="this is a test", recipient=user1)
         response = self.client.get('/api/actions/%s/script.xml' % button_action.id)
         self.assertEquals(response.status_code, 200)

@@ -79,9 +79,9 @@ Welcome to Ding Dong Dash.
 
     # Create Phone
     try:
-        phone = Phone.objects.get(phone_number=customer_phone, user=user)
+        Phone.objects.get(phone_number=customer_phone, user=user)
     except Exception:
-        phone = Phone.objects.create(phone_number=customer_phone, user=user)
+        Phone.objects.create(phone_number=customer_phone, user=user)
 
     # Create Button Action
     try:

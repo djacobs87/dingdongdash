@@ -28,15 +28,6 @@ def _filter_button_actions(request):
     return ButtonAction.objects.filter(recipient__in=chain(org_users, [request.user]))
 
 
-def _filter_selectable_phones(request):
-    if request.user.is_superuser:
-        return Phone.objects.all()
-
-    organizations = Organization.objects.filter(organization_users__user=request.user)
-    org_users = User.objects.filter(organizations_organization__in=organizations)
-    return Phone.objects.filter(user__in=chain(org_users, [request.user]))
-
-
 def _filter_selectable_users(request):
     if request.user.is_superuser:
         return User.objects.all()
@@ -158,12 +149,14 @@ def get_user_queryset(self, request):
 
     return _filter_selectable_users(request)
 
+
 def save_user_model(self, request, obj, form, change):
     obj.is_staff = True
     obj.save()
     for org in request.user.organizations_organization.all():
         org_user = OrganizationUser.objects.create(user=obj, organization=org)
         org.organization_users.add(org_user)
+
 
 UserAdmin.get_queryset = get_user_queryset
 UserAdmin.save_model = save_user_model
@@ -232,6 +225,7 @@ class EmailRequiredUserAdmin(UserAdmin):
     add_form = MyUserCreationForm
     add_fieldsets = ((None, {'fields': ('username', 'email',
                                         'password1', 'password2'), 'classes': ('wide',)}),)
+
 
 admin.site.unregister(User)
 admin.site.register(User, EmailRequiredUserAdmin)
