@@ -120,16 +120,17 @@ class ShopifyWebhookTestCase(TestCase):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         mock_request = mock.Mock()
 
+        mock_request.method = "POST"
         mock_request.META = {
             'X_SHOPIFY_TEST': 'true',
-            'X_SHOPIFY_TOPIC': 'orders/paid',
+            'HTTP_X_SHOPIFY_TOPIC': 'orders/paid',
             'X_NEWRELIC_ID': 'VQQUUFNS',
             'X_FORWARDED_PROTO': 'https',
             'X_SHOPIFY_HMAC_SHA256': '/A4sSNHE4Mbh7liKS5mEr7tFfVsawfHVO9sGCXh7MYQ=',
             'X_SHOPIFY_ORDER_ID': '820982911946154508',
             'HOST': 'ding-dong-ditch-aphelionz.c9users.io',
             'ACCEPT': '*/*',
-            'X_SHOPIFY_SHOP_DOMAIN': 'mrh-io.myshopify.com',
+            'HTTP_X_SHOPIFY_SHOP_DOMAIN': 'mrh-io.myshopify.com',
             'CONNECTION': 'keep-alive',
             'USER_AGENT': 'Ruby',
             'X_REGION': 'usw',
@@ -159,11 +160,11 @@ class ShopifyWebhookTestCase(TestCase):
             # Test button action attributes
             new_button_action = ButtonAction.objects.first()
             self.assertEqual(new_button_action.target_user, Phone.objects.first())
-            self.assertEqual(new_button_action.name, "Text John Smith")
+            self.assertEqual(new_button_action.name, "Text Myself")
             self.assertEqual(new_button_action.type, "message")
 
             # Test to see appearance of new button
-            self.assertEqual(len(Button.objects.all()), 1)
+            self.assertEqual(len(Button.objects.all()), 2)
 
             # Test new button attributes
             new_button = Button.objects.first()
