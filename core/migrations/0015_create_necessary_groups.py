@@ -12,7 +12,6 @@ def forwards(apps, schema_editor, with_create_permissions=True):
         create_permissions(app_config, verbosity=0)
         app_config.models_module = None
 
-    # import pdb; pdb.set_trace()
     if not Group.objects.filter(name="CoreUser").exists():
         core_user_group = Group.objects.create(name="CoreUser")
         core_user_group.permissions.add(Permission.objects.get(name="Can add email address"))
@@ -30,6 +29,8 @@ def forwards(apps, schema_editor, with_create_permissions=True):
         core_user_group.permissions.add(Permission.objects.get(name="Can add phone"))
         core_user_group.permissions.add(Permission.objects.get(name="Can change phone"))
         core_user_group.permissions.add(Permission.objects.get(name="Can delete phone"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can add user"))
+        org_owner_group.permissions.add(Permission.objects.get(name="Can change user"))
 
     if not Group.objects.filter(name="OrganizationOwner").exists():
         org_owner_group = Group.objects.create(name="OrganizationOwner")
@@ -42,8 +43,6 @@ def forwards(apps, schema_editor, with_create_permissions=True):
         org_owner_group.permissions.add(Permission.objects.get(name="Can add organization user"))
         org_owner_group.permissions.add(Permission.objects.get(name="Can change organization user"))
         org_owner_group.permissions.add(Permission.objects.get(name="Can delete organization user"))
-        org_owner_group.permissions.add(Permission.objects.get(name="Can add user"))
-        org_owner_group.permissions.add(Permission.objects.get(name="Can change user"))
         org_owner_group.permissions.add(Permission.objects.get(name="Can delete user"))
 
     if not Group.objects.filter(name="RequiresPasswordChange").exists():

@@ -2,6 +2,7 @@ from itertools import chain
 
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.admin import SiteAdmin
 
@@ -94,7 +95,7 @@ class PhoneAdmin(admin.ModelAdmin):
         org_users = User.objects.filter(organizations_organization__in=organizations)
         return Phone.objects.filter(user__in=chain(org_users, [request.user]))
 
-admin.site.register(Phone, PhoneAdmin)
+# admin.site.register(Phone, PhoneAdmin)
 
 
 class APILogAdmin(ImportExportModelAdmin):
@@ -147,14 +148,26 @@ GroupAdmin.get_model_perms = get_model_perms_superuser
 SiteAdmin.get_model_perms = get_model_perms_superuser
 
 
-class EmailAddressInlineAdmin(admin.TabularInline):
-    model = EmailAddress
-
 class PhoneInlineAdmin(admin.TabularInline):
     model = Phone
 
-UserAdmin.get_model_perms = get_model_perms_superuser
-UserAdmin.inlines = [EmailAddressInlineAdmin, PhoneInlineAdmin]
+
+def get_user_queryset(self, request):
+    if request.user.is_superuser:
+        return User.objects.all()
+
+    return _filter_selectable_users(request)
+
+def save_user_model(self, request, obj, form, change):
+    obj.is_staff = True
+    obj.save()
+    for org in request.user.organizations_organization.all():
+        org_user = OrganizationUser.objects.create(user=obj, organization=org)
+        org.organization_users.add(org_user)
+
+UserAdmin.get_queryset = get_user_queryset
+UserAdmin.save_model = save_user_model
+UserAdmin.inlines = [PhoneInlineAdmin]
 
 admin.site.unregister(CalendarRelation)
 admin.site.register(CalendarRelation, DDDModelAdmin)
@@ -196,3 +209,29 @@ admin.site.unregister(SocialAccount)
 admin.site.unregister(SocialApp)
 admin.site.unregister(SocialToken)
 admin.site.unregister(EmailAddress)
+
+
+# Override User creation / change form
+class EmailRequiredMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(EmailRequiredMixin, self).__init__(*args, **kwargs)
+        # make user email field required
+        self.fields['email'].required = True
+
+
+class MyUserCreationForm(EmailRequiredMixin, UserCreationForm):
+    pass
+
+
+class MyUserChangeForm(EmailRequiredMixin, UserChangeForm):
+    pass
+
+
+class EmailRequiredUserAdmin(UserAdmin):
+    form = MyUserChangeForm
+    add_form = MyUserCreationForm
+    add_fieldsets = ((None, {'fields': ('username', 'email',
+                                        'password1', 'password2'), 'classes': ('wide',)}),)
+
+admin.site.unregister(User)
+admin.site.register(User, EmailRequiredUserAdmin)
