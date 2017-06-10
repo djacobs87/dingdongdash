@@ -8,6 +8,7 @@ from django.utils import timezone
 
 class Phone(models.Model):
     phone_number = models.CharField(max_length=15)
+    description = models.CharField(max_length=64, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
 
     def __unicode__(self):
