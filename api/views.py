@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 
 import json
 import random
@@ -48,11 +49,11 @@ def generate_action_xml_script(request, action_id):
 def order_creation(request):
     body = json.loads(request.body)
     customer_email = body[u'email']
-    customer_phone = body['billing_address'][u'phone']
+    customer_phone = body[u'billing_address'][u'phone']
     password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
     quantity = 0
-    for item in body['line_items']:
+    for item in body[u'line_items']:
         quantity += item['quantity']
 
     try:
@@ -64,7 +65,7 @@ def order_creation(request):
         group = Group.objects.get(name='RequiresPasswordChange')
         user.groups.add(group)
         user.save()
-        # Send Email with Login Info to users
+
         message = """
 Hello!
 
@@ -73,9 +74,12 @@ Welcome to Ding Dong Dash.
 - Your username is {} and your temporary password is {}.
 - The phone number that you have registered is {}.
 """.format(customer_email, password, customer_phone)
-        print(message)
-        # email = EmailMessage(message, to=[customer_email])
-        # email.send()
+
+        mail_result = send_mail(message=message,
+                  subject="Welcome to Ding Dong Dash!",
+                  from_email="service@dingdongdash.net",
+                  recipient_list=[customer_email, "service@dingdongdash.net"])
+        print(mail_result)
 
     # Create Phone
     try:
