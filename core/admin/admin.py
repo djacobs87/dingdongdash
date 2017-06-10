@@ -24,8 +24,7 @@ def _filter_button_actions(request):
 
     organizations = Organization.objects.filter(organization_users__user=request.user)
     org_users = User.objects.filter(organizations_organization__in=organizations)
-    phones = Phone.objects.filter(user__in=chain(org_users, [request.user]))
-    return ButtonAction.objects.filter(target_user__in=phones)
+    return ButtonAction.objects.filter(recipient__in=chain(org_users, [request.user]))
 
 
 def _filter_selectable_phones(request):
@@ -71,7 +70,7 @@ admin.site.register(Button, ButtonAdmin)
 
 class ButtonActionAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "target_user":
+        if db_field.name == "recipient":
             kwargs['queryset'] = _filter_selectable_users(request)
         return super(ButtonActionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 

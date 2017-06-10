@@ -24,12 +24,12 @@ class ProcessButtonTestCase(TestCase):
         self.button.single_press_actions.add(
             ButtonAction.objects.create(type="call",
                                         name="Call User1",
-                                        target_user=self.phone,
+                                        recipient=self.user1,
                                         message="Testing 123"))
         self.button.double_press_actions.add(
              ButtonAction.objects.create(type="message",
                                          name="Text User1",
-                                         target_user=self.phone,
+                                         recipient=self.user1,
                                          message="Testing 123"))
 
     def tearDown(self):
@@ -106,7 +106,7 @@ class GenerateXMLScriptTestCase(TestCase):
                                          email='user1@test.com',
                                          password='abc123!@#')
         phone = Phone.objects.create(phone_number="+19783284466", user=user1)
-        button_action = ButtonAction.objects.create(message="this is a test", target_user=phone)
+        button_action = ButtonAction.objects.create(message="this is a test", recipient=user1)
         response = self.client.get('/api/actions/%s/script.xml' % button_action.id)
         self.assertEquals(response.status_code, 200)
 
@@ -159,7 +159,7 @@ class ShopifyWebhookTestCase(TestCase):
 
             # Test button action attributes
             new_button_action = ButtonAction.objects.first()
-            self.assertEqual(new_button_action.target_user, Phone.objects.first())
+            self.assertEqual(new_button_action.recipient, new_user)
             self.assertEqual(new_button_action.name, "Text Myself")
             self.assertEqual(new_button_action.type, "message")
 

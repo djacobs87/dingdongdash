@@ -12,19 +12,13 @@ class FunctionalTestCase(TestCase):
                                               password='abc123!@#')
         self.phone = Phone.objects.create(phone_number="+19783284466", user=self.user1)
         self.button_action1 = ButtonAction.objects.create(name="Call User1",
-                                                          target_user=self.phone)
+                                                          recipient=self.user1)
 
         self.button1 = Button.objects.create(serial_number="1111222233334444", user=self.user1)
-        self.button1.single_press_actions.add(
-            ButtonAction.objects.create(name="Call User1", target_user=self.phone))
+        self.button1.single_press_actions.add(self.button_action1)
         self.button1.double_press_actions.add(
-            ButtonAction.objects.create(name="Text User1", target_user=self.phone))
+            ButtonAction.objects.create(name="Text User1", recipient=self.user1))
         self.battery_voltage = "1546mV"
-
-    def tearDown(self):
-        self.button1.delete()
-        self.phone.delete()
-        self.user1.delete()
 
     def test_process_button_single(self):
         result = process_button(self.battery_voltage,
@@ -100,7 +94,7 @@ class ModelRepresentationTestCase(TestCase):
                                         email='user1@test.com',
                                         password='abc123!@#')
         phone = Phone.objects.create(phone_number="+12223334444", user=user)
-        button_action = ButtonAction.objects.create(type="call", target_user=phone)
+        button_action = ButtonAction.objects.create(type="call", recipient=user)
         self.assertEqual(unicode(button_action), "call")
         button_action.name = "Test Action"
         self.assertEqual(unicode(button_action), "Test Action")

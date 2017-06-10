@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from twilio.rest import TwilioRestClient
 
 from dingdongditch import settings
-from core.models import Button
+from core.models import Button, Phone
 
 
 def generate_params(button_action, spoof, **kwargs):
@@ -27,7 +27,8 @@ def generate_params(button_action, spoof, **kwargs):
         params['auth_token'] = kwargs.get('auth_token', settings.TWILIO_AUTH_TOKEN)
         params['from_number'] = kwargs.get('from_number', settings.TWILIO_FROM_NUMBER)
 
-    params['to_number'] = button_action.target_user.phone_number
+    phones = Phone.objects.filter(user=button_action.recipient)
+    params['to_numbers'] = [phone.phone_number for phone in phones]
 
     return params
 
@@ -59,11 +60,13 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
             type = request.pop('type')
 
             if type == "call":
-                call = create_call(**request)
-                result_ledger.append(call.uri)
+                calls = create_call(**request)
+                for call in calls:
+                    result_ledger.append(call.uri)
             elif type == "message":
-                message = send_message(**request)
-                result_ledger.append(message.uri)
+                messages = send_message(**request)
+                for message in messages:
+                    result_ledger.append(message.uri)
             else:
                 raise Exception("Unsupported action type")
 
@@ -81,30 +84,36 @@ def process_button(battery_voltage, serial_number, click_type, spoof=False):
 def create_call(**kwargs):
     try:
         client = TwilioRestClient(kwargs['account_sid'], kwargs['auth_token'])
-        call = client.calls.create(url=kwargs['message'],
-                                   to=kwargs['to_number'],
-                                   from_=kwargs['from_number'],
-                                   method="GET")
+        calls = []
+        for number in kwargs['to_numbers']:
+            response = client.calls.create(url=kwargs['message'],
+                                           to=number,
+                                           from_=kwargs['from_number'],
+                                           method="GET")
+            calls.append(response)
     except Exception as e:
         print(e)
         raise Exception(e)
 
-    return call
+    return calls
 
 
 # https://www.twilio.com/docs/api/rest/message#instance-properties
 def send_message(**kwargs):
     try:
         client = TwilioRestClient(kwargs['account_sid'], kwargs['auth_token'])
-        message = client.messages.create(body=kwargs['message'],
-                                         to=kwargs['to_number'],
-                                         from_=kwargs['from_number'],
-                                         method="GET")
+        messages = []
+        for number in kwargs['to_numbers']:
+            response = client.messages.create(body=kwargs['message'],
+                                              to=number,
+                                              from_=kwargs['from_number'],
+                                              method="GET")
+            messages.append(response)
     except Exception as e:
         print(e)
         raise Exception(e)
 
-    return message
+    return messages
 
 
 # def register_button(request):

@@ -85,11 +85,11 @@ Welcome to Ding Dong Dash.
 
     # Create Button Action
     try:
-        action = ButtonAction.objects.get(target_user=phone,
+        action = ButtonAction.objects.get(recipient=user,
                                           name="Text Myself",
                                           type="message")
     except Exception:
-        action = ButtonAction.objects.create(target_user=phone,
+        action = ButtonAction.objects.create(recipient=user,
                                              name="Text Myself",
                                              type="message")
 

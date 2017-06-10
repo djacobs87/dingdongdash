@@ -50,10 +50,10 @@ class AdminTestCase(TestCase):
                                              user=self.user1)
 
         self.button_action1 = ButtonAction.objects.create(name="Call User1",
-                                                          target_user=self.phone)
+                                                          recipient=self.user1)
         self.button1.single_press_actions.add(self.button_action1)
         self.button1.double_press_actions.add(
-            ButtonAction.objects.create(name="Text User1", target_user=self.phone))
+            ButtonAction.objects.create(name="Text User1", recipient=self.user1))
 
         # Other People's Stuff
         self.user2 = User.objects.create_user(username='user2',
@@ -66,7 +66,7 @@ class AdminTestCase(TestCase):
         self.someone_elses_action = ButtonAction.objects.create(name="Not Mine",
                                                                 type="call",
                                                                 message="hi",
-                                                                target_user=self.not_my_phone)
+                                                                recipient=self.user2)
 
         # Prep site and request stuff
         self.superuser_request = MockRequest()
@@ -123,11 +123,11 @@ class AdminTestCase(TestCase):
         self.assertEqual(list(superuser_single_press_field.queryset),
                          list(ButtonAction.objects.all()))
         self.assertEqual(list(single_press_field.queryset).sort(),
-                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+                         list(ButtonAction.objects.filter(recipient=self.user1)).sort())
         self.assertEqual(list(double_press_field.queryset).sort(),
-                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+                         list(ButtonAction.objects.filter(recipient=self.user1)).sort())
         self.assertEqual(list(long_press_field.queryset).sort(),
-                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+                         list(ButtonAction.objects.filter(recipient=self.user1)).sort())
 
     def test_phone_queryset(self):
         non_superuser_request = MockRequest()
@@ -177,7 +177,7 @@ class AdminTestCase(TestCase):
         self.assertEqual(list(baa.get_queryset(self.superuser_request)),
                          list(ButtonAction.objects.all()))
         self.assertEqual(list(baa.get_queryset(non_superuser_request)).sort(),
-                         list(ButtonAction.objects.filter(target_user=self.phone)).sort())
+                         list(ButtonAction.objects.filter(recipient=self.user1)).sort())
 
     def test_button_action_formfield_for_foreignkey(self):
         non_superuser_request = MockRequest()
@@ -186,22 +186,22 @@ class AdminTestCase(TestCase):
         baa = ButtonActionAdmin(ButtonAction, self.site)
 
         kwargs = {}
-        target_user_dbfield = \
-            self.button_action1._meta.get_field("target_user")
-        target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                             non_superuser_request,
-                             **kwargs))
+        recipient_dbfield = \
+            self.button_action1._meta.get_field("recipient")
+        recipient_field = baa.formfield_for_foreignkey(recipient_dbfield,
+                                                       non_superuser_request,
+                                                       **kwargs)
 
-        superuser_target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                                       self.superuser_request,
-                                       **kwargs))
+        superuser_recipient_field = baa.formfield_for_foreignkey(recipient_dbfield,
+                                                                 self.superuser_request,
+                                                                 **kwargs)
 
-        self.assertEqual(list(superuser_target_user_field.queryset),
-                         list(Phone.objects.all()))
+        self.assertEqual(list(superuser_recipient_field.queryset),
+                         list(User.objects.all()))
 
-        queryset_list = list(target_user_field.queryset)
+        queryset_list = list(recipient_field.queryset)
         queryset_list.sort()
-        target_list = list(Phone.objects.filter(user=self.user1))
+        target_list = [self.user1]
         target_list.sort()
         self.assertEqual(queryset_list, target_list)
 

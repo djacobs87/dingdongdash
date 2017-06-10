@@ -12,7 +12,8 @@ from core.models import ButtonAction, Phone
 def collect_ids(apps, schema_editor):
     for ba in ButtonAction.objects.raw("SELECT id, target_user_id FROM core_buttonaction"):
         try:
-            ba.recipient = User.objects.get(id=ba.target_user_id)
+            phone = Phone.objects.get(id=ba.target_user_id)
+            ba.recipient = phone.user
         except Exception as e:
             ba.recipient = User.objects.first()
 
