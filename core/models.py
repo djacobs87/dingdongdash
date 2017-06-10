@@ -46,7 +46,7 @@ class Button(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
     serial_number = models.CharField(max_length=16, unique=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="button_user")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="button_user")
     single_press_actions = models.ManyToManyField(ButtonAction,
                                                   related_name="single_press_actions")
     double_press_actions = models.ManyToManyField(ButtonAction,
