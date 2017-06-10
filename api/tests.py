@@ -159,7 +159,7 @@ class ShopifyWebhookTestCase(TestCase):
             # Test button action attributes
             new_button_action = ButtonAction.objects.first()
             self.assertEqual(new_button_action.target_user, Phone.objects.first())
-            self.assertEqual(new_button_action.name, "Text John Smith")
+            self.assertEqual(new_button_action.name, "Text Myself")
             self.assertEqual(new_button_action.type, "message")
 
             # Test to see appearance of new button

@@ -189,12 +189,12 @@ class AdminTestCase(TestCase):
         target_user_dbfield = \
             self.button_action1._meta.get_field("target_user")
         target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                            non_superuser_request,
-                            **kwargs))
+                             non_superuser_request,
+                             **kwargs))
 
         superuser_target_user_field = (baa.formfield_for_foreignkey(target_user_dbfield,
-                                        self.superuser_request,
-                                        **kwargs))
+                                       self.superuser_request,
+                                       **kwargs))
 
         self.assertEqual(list(superuser_target_user_field.queryset),
                          list(Phone.objects.all()))
@@ -204,7 +204,6 @@ class AdminTestCase(TestCase):
         target_list = list(Phone.objects.filter(user=self.user1))
         target_list.sort()
         self.assertEqual(queryset_list, target_list)
-
 
     def test_phone_formfield_for_foreignkey(self):
         non_superuser_request = MockRequest()

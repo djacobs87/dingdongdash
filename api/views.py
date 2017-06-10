@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
 
-import random, string
 import json
+import random
+import string
 
 from shopify_webhook.decorators import webhook
 from django.contrib.auth.models import User, Group
@@ -57,7 +57,7 @@ def order_creation(request):
 
     try:
         user = User.objects.get(email=customer_email)
-    except Exception as e:
+    except Exception:
         user = User.objects.create_user(username=customer_email,
                                         email=customer_email,
                                         password=password)
@@ -65,7 +65,14 @@ def order_creation(request):
         user.groups.add(group)
         user.save()
         # Send Email with Login Info to users
-        message = 'Hello, your username is '+customer_email+' and your temporary password is "'+password+'". The phone number that you have registered is '+customer_phone
+        message = """
+Hello!
+
+Welcome to Ding Dong Dash.
+
+- Your username is {} and your temporary password is {}.
+- The phone number that you have registered is {}.
+""".format(customer_email, password, customer_phone)
         print(message)
         # email = EmailMessage(message, to=[customer_email])
         # email.send()
@@ -73,25 +80,30 @@ def order_creation(request):
     # Create Phone
     try:
         phone = Phone.objects.get(phone_number=customer_phone, user=user)
-    except Exception as e:
+    except Exception:
         phone = Phone.objects.create(phone_number=customer_phone, user=user)
 
     # Create Button Action
     try:
-        action = ButtonAction.objects.create(target_user = phone,
-                                             name = "Text John Smith",
-                                             type = "message")
-    except Exception as e:
-        action = ButtonAction.objects.create(target_user = phone,
-                                             name = "Text John Smith",
-                                             type = "message")
+        action = ButtonAction.objects.create(target_user=phone,
+                                             name="Text Myself",
+                                             type="message")
+    except Exception:
+        action = ButtonAction.objects.create(target_user=phone,
+                                             name="Text Myself",
+                                             type="message")
 
-    # Create New Buttons
+    # Create New Button(s)
     for i in range(quantity):
-        serial_number = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+        sn = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
         button = Button.objects.create(name="UNASSIGNED",
-                                       user=user,
-                                       serial_number="UNASSIGNED-"+serial_number)
+                              user=user,
+                              serial_number="UNASSIGNED-"+sn)
+
+        button.single_press_actions.add(action)
+        button.double_press_actions.add(action)
+        button.long_press_actions.add(action)
+
 
     return HttpResponse("CREATED", status=201)
 

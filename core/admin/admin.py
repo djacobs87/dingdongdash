@@ -61,7 +61,7 @@ class ButtonAdmin(admin.ModelAdmin):
             organization_user = OrganizationUser.objects.filter(user=request.user)
             organizations = Organization.objects.filter(organization_users=organization_user)
             users = User.objects.filter(organizations_organization__in=organizations)
-            return Button.objects.filter(user__in=chain(users,[request.user]))
+            return Button.objects.filter(user__in=chain(users, [request.user]))
 
         return Button.objects.all()
 
@@ -111,7 +111,6 @@ admin.site.register(APILog, APILogAdmin)
 ##
 # Removals and Modifications of Third Party Models
 ##
-
 
 
 def get_default_permissions(self, request):
