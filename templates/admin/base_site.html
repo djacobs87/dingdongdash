@@ -18,14 +18,13 @@
 .setup {
     padding: 12px;
 }
-       
+
 .home {
-    padding: 12px; 
+    padding: 12px;
 }
 
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
     color: black;
-    margin-left: 50px;
     float: left;
 }
 
@@ -34,7 +33,6 @@
 	line-height: 13px;
 	color: black;
 	letter-spacing: 0px;
-	margin-top: 25px;
 	margin-right: 25px;
 }
 
@@ -197,31 +195,14 @@ a:focus, a:hover {
                 <strong>{% firstof user.get_short_name user.get_username %}</strong>.</div>
             {% endblock %}
             {% block userlinks %}
-                <!-- {% if site_url %}
-                	<div id = "view">
-                    <a href="{{ site_url }}">{% trans 'View site' %}</a></div>
-                {% endif %} -->
-                {% if user.is_active and user.is_staff %}
-                    {% url 'django-admindocs-docroot' as docsroot %}
-                    {% if docsroot %}
-                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
-                    {% endif %}
-                {% endif %}
                 {% if user.has_usable_password %}
                 	<div id = "password">
-                	<a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+                	    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                        <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
                     </div>
                 {% endif %}
-                    <div class = "setup">
-                    <a href="https://dingdongdash.net/pages/ding-dong-ditch-button-setup">{% trans 'Set Up Instructions' %}</a>
-                    </div>
-
                     <div class = "home">
                     <a href = "https://dingdongdash.net/">{% trans 'Store Home' %}</a>
-                    </div>
-                	
-                    <div id = "log-out">
-                	<a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
                     </div>
             {% endblock %}
         </div>

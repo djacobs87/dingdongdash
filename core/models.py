@@ -29,7 +29,7 @@ class ButtonAction(models.Model):
 
     class Meta:
         verbose_name = 'Buttion Action'
-        verbose_name_plural = 'Button Action Editor (Email, SMS, Call)'
+        verbose_name_plural = 'Button Actions'
 
     def __unicode__(self):
         if self.name:
